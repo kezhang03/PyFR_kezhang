@@ -47,6 +47,8 @@ class BaseAdvectionElements(BaseElements):
             'ndims': self.ndims,
             'nvars': self.nvars,
             'srcex': self._src_exprs,
+            # zk: add bnvars
+            'bnvars': len(self.privarmap[self.ndims]),
             'c': self.cfg.items_as('constants', float)
         }
 
@@ -91,10 +93,17 @@ class BaseAdvectionElements(BaseElements):
 
 
         if linsolver == 'linear':
+            # First creat a kernel to calculate C@U
+            # kernels['cu'] = lambda: self._be.kernel(
+            #     'cu', tplargs=srctplargs,
+            #     dims=[self.nupts, self.neles], u=solnupts,
+            #     divub=self._vect_upts, cu=self._base_cu_upts
+            # )
+
             kernels['negdivconf'] = lambda fout: self._be.kernel(
                 'negdivconflin', tplargs=srctplargs,
                 dims=[self.nupts, self.neles], tdivtconf=self.scal_upts[fout],
-                rcpdjac=self.rcpdjac_at('upts'), ploc=plocupts, u=solnupts,
+                rcpdjac=self.rcpdjac_at('upts'), ploc=plocupts, u=solnupts, cu=self._base_cu_upts
             )
 
         else:

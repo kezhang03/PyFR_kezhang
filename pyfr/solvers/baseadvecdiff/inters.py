@@ -14,7 +14,9 @@ class BaseAdvectionDiffusionIntInters(BaseAdvectionIntInters):
         self._vect_rhs = self._vect_view(rhs, 'get_vect_fpts_for_inter')
 
         # Generate the additional view matrices for artificial viscosity
-        if cfg.get('solver', 'shock-capturing') == 'artificial-viscosity':
+        # zk: return None if no artificial viscosity
+        # if cfg.get('solver', 'shock-capturing') == 'artificial-viscosity':
+        if cfg.get('solver', 'shock-capturing', 'none') == 'artificial-viscosity':
             self._artvisc_lhs = self._view(lhs, 'get_artvisc_fpts_for_inter')
             self._artvisc_rhs = self._view(rhs, 'get_artvisc_fpts_for_inter')
         else:

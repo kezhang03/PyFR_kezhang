@@ -85,11 +85,10 @@ class StdNoneController(BaseStdController):
         """
         MODIFICATION FOR LINEAR SOLVER
         """
-        """Just for test, t = 0 doesn't make sense"""
         # Calculate baseflow gradients
-        if self.linsolver == 'linear' and t == 0:
+        # zk: use self.nacptsteps instead of t, which is better for restart
+        if self.linsolver == 'linear' and self.nacptsteps == 0:
             self.system.compute_baseflow_grads(self.tcurr, self._idxcurr)
-        print('t = ',t)
 
         """
         MODIFICATION FOR LINEAR SOLVER

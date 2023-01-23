@@ -7,9 +7,11 @@
               tdivtconf='inout fpdtype_t[${str(nvars)}]'
               ploc='in fpdtype_t[${str(ndims)}]'
               u='in fpdtype_t[${str(nvars)}]'
-              rcpdjac='in fpdtype_t'>
+              rcpdjac='in fpdtype_t'
+              cu='in fpdtype_t[${str(bnvars)}]'>
 
+// Compute the C@U term in the formula and combine it as a forcing term
 % for i, ex in enumerate(srcex):
-    tdivtconf[${i}] = -rcpdjac*tdivtconf[${i}] + ${ex};
+    tdivtconf[${i}] = -rcpdjac*tdivtconf[${i}] + ${ex} - cu[${i}];
 % endfor
 </%pyfr:kernel>

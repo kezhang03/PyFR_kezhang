@@ -7,7 +7,7 @@ from pyfr.solvers.baseadvec import BaseAdvectionElements
 class LinearAdvectionElements(BaseAdvectionElements):
     @property
     def _scratch_bufs(self):
-        bufs = {'scal_fpts', 'vect_upts', 'vect_fpts','basegrad_upts'}
+        bufs = {'scal_fpts', 'vect_upts', 'vect_fpts', 'basegrad_upts', 'base_cu_upts'}
 
         if 'flux' in self.antialias:
             bufs |= {'scal_qpts', 'vect_qpts'}

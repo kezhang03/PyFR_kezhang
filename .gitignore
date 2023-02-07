@@ -26,3 +26,6 @@ doc/build/
 
 # notebook files
 *.ipynb
+
+# run directory
+run/

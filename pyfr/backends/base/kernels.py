@@ -159,7 +159,7 @@ class BasePointwiseKernelProvider(BaseKernelProvider):
 
             # Process the argument list
             argb, argmv = self._build_arglst(dims, argn, argt, kwargs)
-
+            print(argb)
             # Return a Kernel subclass instance
             return self._instantiate_kernel(dims, fun, argb, argmv)
 

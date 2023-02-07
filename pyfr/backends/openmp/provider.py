@@ -94,6 +94,8 @@ class OpenMPPointwiseKernelProvider(OpenMPKernelProvider,
 
         # Process the arguments
         for i, k in enumerate(arglst):
+            print(i)
+            print(k)
             if isinstance(k, str):
                 rtargs.append((i, k))
             else:

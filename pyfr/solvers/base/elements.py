@@ -249,7 +249,7 @@ class BaseElements:
         salloc = lambda ex, n: alloc(ex, (n, nvars, neles))
         valloc = lambda ex, n: alloc(ex, (ndims, n, nvars, neles))
         bvalloc = lambda ex, n: alloc(ex, (ndims, n, self.bnvars, neles))
-
+        bsalloc = lambda ex, n: alloc(ex, (ndims, n, self.bnvars, neles))
         # Allocate required scalar scratch space
         if 'scal_fpts' in sbufs:
             self._scal_fpts = salloc('scal_fpts', nfpts)
@@ -275,7 +275,7 @@ class BaseElements:
         if 'basegrad_upts' in sbufs:
             self._basegrad_upts = bvalloc('basegrad_upts', nupts)
         if 'base_cu_upts' in sbufs:
-            self._base_cu_upts = bvalloc('base_cu_upts', nupts)
+            self._base_cu_upts = bsalloc('base_cu_upts', nupts)
         """
         Linear solver modifications  /end
         """

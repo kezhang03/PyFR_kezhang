@@ -21,12 +21,12 @@ class BaseInters:
         self.ndims = next(iter(elemap.values())).ndims
         self.nvars = next(iter(elemap.values())).nvars
         """
-        Modified by linear solver
+        MODIFICATION FOR LINEAR SOLVER
         """
         if cfg.get('solver','solver-type','None') == 'linear':
             self.bnvars = next(iter(elemap.values())).bnvars
         """
-        Modified by linear solver
+        MODIFICATION FOR LINEAR SOLVER
         """
 
         # Get the number of interfaces

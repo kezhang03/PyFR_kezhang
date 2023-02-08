@@ -21,6 +21,9 @@ class BaseAdvectionElements(BaseElements):
 
         kernels = self.kernels
 
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
         # Register pointwise kernels with the backend
         linsolver = self.cfg.get('solver','solver-type','None')
         if linsolver == 'linear':
@@ -34,6 +37,9 @@ class BaseAdvectionElements(BaseElements):
             self._be.pointwise.register(
                 'pyfr.solvers.baseadvec.kernels.negdivconf'
             )
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
 
         # What anti-aliasing options we're running with
         fluxaa = 'flux' in self.antialias
@@ -47,8 +53,14 @@ class BaseAdvectionElements(BaseElements):
             'ndims': self.ndims,
             'nvars': self.nvars,
             'srcex': self._src_exprs,
+            """
+            MODIFICATION FOR LINEAR SOLVER
+            """
             # zk: add bnvars
             'bnvars': len(self.privarmap[self.ndims]),
+            """
+            MODIFICATION FOR LINEAR SOLVER
+            """
             'c': self.cfg.items_as('constants', float)
         }
 
@@ -91,7 +103,9 @@ class BaseAdvectionElements(BaseElements):
                 'copy', self._scal_upts_cpy, self.scal_upts[uin]
             )
 
-
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
         if linsolver == 'linear':
             # First creat a kernel to calculate C@U
             kernels['cu'] = lambda: self._be.kernel(
@@ -112,6 +126,9 @@ class BaseAdvectionElements(BaseElements):
                 dims=[self.nupts, self.neles], tdivtconf=self.scal_upts[fout],
                 rcpdjac=self.rcpdjac_at('upts'), ploc=plocupts, u=solnupts
             )
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
 
         # In-place solution filter
         if self.cfg.getint('soln-filter', 'nsteps', '0'):

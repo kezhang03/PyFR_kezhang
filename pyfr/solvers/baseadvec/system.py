@@ -56,14 +56,14 @@ class BaseAdvectionSystem(BaseSystem):
         g2.add_all(k['eles/tdivtconf'], deps=k['mpiint/comm_flux'])
 
         """
-        Linear solver modifications
+        MODIFICATION FOR LINEAR SOLVER
         """
         if self.linsolver == 'linear':
             for l in k['eles/cu']:
                 g2.add(l, deps=deps(l,'eles/tdivtconf'))
             # g2.add_all(k['eles/cu'], deps=k['eles/tdivtconf'])
         """
-        Linear solver modifications  /end
+        MODIFICATION FOR LINEAR SOLVER
         """
 
         # Obtain the physical divergence of the corrected flux

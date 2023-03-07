@@ -272,8 +272,8 @@ class BaseElements:
         MODIFICATION FOR LINEAR SOLVER
         """
         # Allocate required vector scratch space
-        if 'basegrad_upts' in sbufs:
-            self._basegrad_upts = bvalloc('basegrad_upts', nupts)
+        #if 'basegrad_upts' in sbufs:
+        #    self._basegrad_upts = bvalloc('basegrad_upts', nupts)
         if 'base_cu_upts' in sbufs:
             self._base_cu_upts = bsalloc('base_cu_upts', nupts)
         """

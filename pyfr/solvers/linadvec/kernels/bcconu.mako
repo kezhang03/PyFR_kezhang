@@ -7,6 +7,6 @@
               ulout='out view fpdtype_t[${str(nvars)}]'
               nlin='in fpdtype_t[${str(ndims)}]'>
 % for i in range(bnvars):
-      ulout[${i}] = ulin[${i}];
+      ulout[${i+bnvars}] = ulin[${i+bnvars}];
 % endfor
 </%pyfr:kernel>

@@ -66,7 +66,7 @@ class LinearAdvectionElements(BaseAdvectionElements):
                 gradu=slicem(self._vect_upts, 'curved'),
                 smats=self.curved_smat_at('upts'),
                 rcpdjac=self.rcpdjac_at('upts', 'curved'),
-                gradbaseu=slicem(self._basegrad_upts, 'curved')
+                #gradbaseu=slicem(self._basegrad_upts, 'curved')
             )
 
 
@@ -76,7 +76,7 @@ class LinearAdvectionElements(BaseAdvectionElements):
                 dims=[self.nupts, regions['linear']],
                 gradu=slicem(self._vect_upts, 'linear'),
                 upts=self.upts, verts=self.ploc_at('linspts', 'linear'),
-                gradbaseu=slicem(self._basegrad_upts, 'linear')
+                #gradbaseu=slicem(self._basegrad_upts, 'linear')
             )
 
         def gradcoru_fpts():

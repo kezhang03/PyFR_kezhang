@@ -10,7 +10,7 @@
 
     // Compute the average quantities
     fpdtype_t p;
-    fpdtype_t v[${bnvars}];
+    fpdtype_t v[${ndim}];
     fpdtype_t invrhob = 1.0/u[${bnvars}];
 % for i in range(ndims):
     v[${i}] = invrhob*u[${i + 1}];
@@ -19,16 +19,18 @@
   // continuity equation
   cu[0] = 0;
   // momentum equation (x)
-  cu[1] =  u[0]*(u[5]*divub[1][1] + u[6]*divub[1][2]) + u[4]*(v[1]*divub[1][1] + v[2]*divub[1][2]);
+  // grad: 1st index is the dimension
+  // grad: 2nd index is the variable
+  cu[1] =  u[0]*(u[5]*divub[0][5] + u[6]*divub[1][5]) + u[4]*(v[1]*divub[0][5] + v[2]*divub[1][5]);
   // momentum equation (y)
-  cu[2] =  u[0]*(u[5]*divub[2][1] + u[6]*divub[2][2]) + u[4]*(v[1]*divub[2][1] + v[2]*divub[2][2]);
+  cu[2] =  u[0]*(u[5]*divub[0][6] + u[6]*divub[1][6]) + u[4]*(v[1]*divub[0][6] + v[2]*divub[1][6]);
   // energy equation
-  cu[3] =  (${c['gamma'] - 1})*u[3]*(divub[1][1] + divub[2][2]) + cu[3] + (${1 - c['gamma']})*(v[1]*divub[3][1] + v[2]*divub[3][2]);
+  cu[3] =  (${c['gamma'] - 1})*u[3]*(divub[0][5] + divub[1][6]) + (${1 - c['gamma']})*(v[0]*divub[0][7] + v[1]*divub[1][7]);
 % elif ndims == 3:
   cu[0] = 0;
-  cu[1] =  u[0]*(u[6]*divub[1][1] + u[7]*divub[1][2] + u[8]*divub[1][3]) + u[5]*v[1]*(divub[1][1] + divub[2][2] + divub[3][3]);
-  cu[2] =  u[0]*(u[6]*divub[2][1] + u[7]*divub[2][2] + u[8]*divub[2][3]) + u[5]*v[2]*(divub[1][1] + divub[2][2] + divub[3][3]);
-  cu[3] =  u[0]*(u[6]*divub[3][1] + u[7]*divub[3][2] + u[8]*divub[3][3]) + u[5]*v[3]*(divub[1][1] + divub[2][2] + divub[3][3]);
-  cu[4] =  (${c['gamma'] - 1})*u[4]*(divub[1][1] + divub[2][2] + divub[3][3]) + (${1 - c['gamma']})*(v[1]*divub[4][1] + v[2]*divub[4][2] + v[3]*divub[4][3]);
+  cu[1] =  u[0]*(u[5]*divub[0][5] + u[6]*divub[1][5] + u[7]*divub[2][5]) + u[4]*(v[1]*divub[0][5] + v[2]*divub[1][5] + v[3]*divub[2][5]);
+  cu[2] =  u[0]*(u[5]*divub[0][6] + u[6]*divub[1][6] + u[7]*divub[2][6]) + u[4]*(v[1]*divub[0][6] + v[2]*divub[1][6] + v[3]*divub[2][6]);
+  cu[3] =  u[0]*(u[5]*divub[0][7] + u[6]*divub[1][7] + u[7]*divub[2][7]) + u[4]*(v[1]*divub[0][7] + v[2]*divub[1][7] + v[3]*divub[2][7]);
+  cu[4] =  (${c['gamma'] - 1})*u[3]*(divub[0][5] + divub[1][6] + divub[2][7]) + (${1 - c['gamma']})*(v[0]*divub[0][7] + v[1]*divub[1][7] + v[2]*divub[2][7]);
 % endif
 </%pyfr:kernel>

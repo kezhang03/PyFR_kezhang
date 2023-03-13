@@ -19,9 +19,5 @@
 % for i in range(bnvars):
     ul[${i}] =  mag_nl*fn[${i}];
     ur[${i}] = -mag_nl*fn[${i}];
-
-    // set base flow flux to 0
-    ul[${i+bnvars}] = 0;
-    ur[${i+bnvars}] = 0;
 % endfor
 </%pyfr:kernel>

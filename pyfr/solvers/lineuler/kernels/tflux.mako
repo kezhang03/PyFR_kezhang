@@ -17,8 +17,5 @@
 % for i, j in pyfr.ndrange(ndims, bnvars):
     f[${i}][${j}] = ${' + '.join(f'smats[{i}][{k}]*ftemp[{k}][{j}]'
                                  for k in range(ndims))};
-
-    // set all base flow flux to 0
-    f[${i}][${j+bnvars}] = 0;
 % endfor
 </%pyfr:kernel>

@@ -10,7 +10,7 @@
 
     // Compute the average quantities
     fpdtype_t p;
-    fpdtype_t v[${ndim}];
+    fpdtype_t v[${ndims}];
     fpdtype_t invrhob = 1.0/u[${bnvars}];
 % for i in range(ndims):
     v[${i}] = invrhob*u[${i + 1}];

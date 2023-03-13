@@ -22,7 +22,5 @@
     // Scale and write out the common normal fluxes
 % for i in range(bnvars):
     ul[${i}] = mag_nl*fn[${i}];
-    // set 0 to all base flow flux
-    ul[${i+bnvars}] = 0;
 % endfor
 </%pyfr:kernel>

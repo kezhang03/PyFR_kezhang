@@ -12,8 +12,6 @@
     fpdtype_t tmpgradu[][${nvars}] = ${pyfr.array('gradu[{i}][{j}]', i=ndims, j=nvars)};
 
 % for i, j in pyfr.ndrange(ndims, bnvars):
-    //gradbaseu[${i}][${j}] = rcpdjac*(${' + '.join(f'smats[{k}][{i}]*tmpgradu[{k}][{j+bnvars}]'
-    //                                          for k in range(ndims))});
     gradu[${i}][${j+bnvars}] = rcpdjac*(${' + '.join(f'smats[{k}][{i}]*tmpgradu[{k}][{j+bnvars}]'
                                               for k in range(ndims))});
 % endfor

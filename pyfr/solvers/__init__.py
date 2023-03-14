@@ -7,6 +7,7 @@ from pyfr.solvers.base import BaseSystem
 from pyfr.solvers.euler import EulerSystem
 from pyfr.solvers.lineuler import LinearEulerSystem
 from pyfr.solvers.navstokes import NavierStokesSystem
+from pyfr.solvers.linnavstokes import LinearNavierStokesSystem
 from pyfr.util import subclass_where
 
 

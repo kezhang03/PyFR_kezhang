@@ -26,10 +26,16 @@ class BaseAdvectionElements(BaseElements):
         """
         # Register pointwise kernels with the backend
         linsolver = self.cfg.get('solver','solver-type','None')
+        linear_type = self.cfg.get('solver', 'system', 'None')
         if linsolver == 'linear':
-            self._be.pointwise.register(
-                'pyfr.solvers.baseadvec.kernels.cu'
-            )
+            if linear_type == 'linear-euler':
+                self._be.pointwise.register(
+                    'pyfr.solvers.baseadvec.kernels.cu'
+                )
+            else:
+                self._be.pointwise.register(
+                    'pyfr.solvers.baseadvec.kernels.culns'
+                )
             self._be.pointwise.register(
                 'pyfr.solvers.baseadvec.kernels.negdivconflin'
             )
@@ -101,11 +107,18 @@ class BaseAdvectionElements(BaseElements):
         """
         if linsolver == 'linear':
             # First creat a kernel to calculate C@U
-            kernels['cu'] = lambda: self._be.kernel(
-                'cu', tplargs=srctplargs,
-                dims=[self.nupts, self.neles], u=self.scal_upts[0],
-                divub=self._vect_upts, cu=self._base_cu_upts
-            )
+            if linear_type == 'linear-euler':
+                kernels['cu'] = lambda: self._be.kernel(
+                    'cu', tplargs=srctplargs,
+                    dims=[self.nupts, self.neles], u=self.scal_upts[0],
+                    divub=self._vect_upts, cu=self._base_cu_upts
+                )
+            else:
+                kernels['cu'] = lambda: self._be.kernel(
+                    'culns', tplargs=srctplargs,
+                    dims=[self.nupts, self.neles], u=self.scal_upts[0],
+                    divub=self._vect_upts, cu=self._base_cu_upts
+                )
 
             kernels['negdivconf'] = lambda fout: self._be.kernel(
                 'negdivconflin', tplargs=srctplargs,

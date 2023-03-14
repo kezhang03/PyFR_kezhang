@@ -63,6 +63,9 @@ modules = [
     'pyfr.solvers.navstokes',
     'pyfr.solvers.navstokes.kernels',
     'pyfr.solvers.navstokes.kernels.bcs',
+    'pyfr.solvers.linnavstokes',
+    'pyfr.solvers.linnavstokes.kernels',
+    'pyfr.solvers.linnavstokes.kernels.bcs',
     'pyfr.writers'
 ]
 

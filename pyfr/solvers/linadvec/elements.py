@@ -29,8 +29,8 @@ class LinearAdvectionElements(BaseAdvectionElements):
 
 
         # Register our pointwise kernels
-        self._be.pointwise.register(f'{kprefix}.gradcoru')
-        self._be.pointwise.register(f'{kprefix}.gradcorulin')
+        self._be.pointwise.register(f'{kprefix}.basegradcoru')
+        self._be.pointwise.register(f'{kprefix}.basegradcorulin')
 
         # Mesh regions
         regions = self._mesh_regions
@@ -61,7 +61,7 @@ class LinearAdvectionElements(BaseAdvectionElements):
 
         if 'curved' in regions:
             kernels['gradcoru_upts_curved'] = lambda: self._be.kernel(
-                'gradcoru', tplargs=tplargs,
+                'basegradcoru', tplargs=tplargs,
                 dims=[self.nupts, regions['curved']],
                 gradu=slicem(self._vect_upts, 'curved'),
                 smats=self.curved_smat_at('upts'),
@@ -72,7 +72,7 @@ class LinearAdvectionElements(BaseAdvectionElements):
 
         if 'linear' in regions:
             kernels['gradcoru_upts_linear'] = lambda: self._be.kernel(
-                'gradcorulin', tplargs=tplargs,
+                'basegradcorulin', tplargs=tplargs,
                 dims=[self.nupts, regions['linear']],
                 gradu=slicem(self._vect_upts, 'linear'),
                 upts=self.upts, verts=self.ploc_at('linspts', 'linear')

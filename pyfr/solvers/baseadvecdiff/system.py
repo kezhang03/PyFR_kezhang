@@ -9,7 +9,6 @@ class BaseAdvectionDiffusionSystem(BaseAdvectionSystem):
     def _rhs_graphs(self, uinbank, foutbank):
         m = self._mpireqs
         k, _ = self._get_kernels(uinbank, foutbank)
-
         def deps(dk, *names): return self._kdeps(k, dk, *names)
 
         g1 = self.backend.graph()
@@ -110,11 +109,25 @@ class BaseAdvectionDiffusionSystem(BaseAdvectionSystem):
         # Compute the transformed divergence of the corrected flux
         g3.add_all(k['eles/tdivtconf'], deps=k['mpiint/comm_flux'])
 
-        # Obtain the physical divergence of the corrected flux
-        for l in k['eles/negdivconf']:
-            g3.add(l, deps=deps(l, 'eles/tdivtconf'))
-        g3.commit()
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
+        if self.linsolver == 'linear':
+            print("culns on")
+            for l in k['eles/cu']:
+                g3.add(l, deps=deps(l,'eles/tdivtconf'))
+                # g2.add_all(k['eles/cu'], deps=k['eles/tdivtconf'])
+            for l in k['eles/negdivconf']:
+                g3.add(l, deps=deps(l, 'eles/cu'))
 
+        # Obtain the physical divergence of the corrected flux
+        else:
+            for l in k['eles/negdivconf']:
+                g3.add(l, deps=deps(l, 'eles/tdivtconf'))
+        g3.commit()
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
         return g1, g2, g3
 
     @memoize

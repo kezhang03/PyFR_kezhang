@@ -2,11 +2,12 @@
 
 import numpy as np
 
-from pyfr.solvers.linadvec import LinearAdvectionElements
+# from pyfr.solvers.linadvec import LinearAdvectionElements
+from pyfr.solvers.baseadvecdiff import BaseAdvectionDiffusionElements
 from pyfr.solvers.lineuler.elements import BaseFluidElements
 
 
-class LinearNavierStokesElements(BaseFluidElements, LinearAdvectionElements):
+class LinearNavierStokesElements(BaseFluidElements, BaseAdvectionDiffusionElements):
 
     @staticmethod
     def grad_con_to_pri(cons, grad_cons, cfg):

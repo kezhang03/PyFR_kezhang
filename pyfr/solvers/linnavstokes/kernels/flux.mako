@@ -2,7 +2,7 @@
 <%namespace module='pyfr.backends.base.makoutil' name='pyfr'/>
 
 % if ndims == 2:
-<%pyfr:macro name='viscous_flux_add' params='uin, grad_uin, fout'>
+<%pyfr:macro name='viscous_flux_add' params='u_in, grad_uin, fout'>
 
     fpdtype_t invrhob = 1.0/u_in[${bnvars}];
     fpdtype_t rho = u_in[0];
@@ -50,11 +50,11 @@
 
     // Compute temperature derivatives (Cv*dT/d[x,y])
     fpdtype_t Tb = pb/rhob;
-    fpdtype_t Tb_x = (invrhob*pb_x+pb*invrhob*invrhob+rhob_x);
-    fpdtype_t Tb_y = (invrhob*pb_y+pb*invrhob*invrhob+rhob_y);
+    fpdtype_t Tb_x = (invrhob*pb_x-invrhob*invrhob*pb*rhob_x);
+    fpdtype_t Tb_y = (invrhob*pb_y-invrhob*invrhob*pb*rhob_y);
 
-    fpdtype_t T_x = Tb_x * (p/pb-rho/rhob) + Tb * (p_x/pb - p/pb/pb*pb_x + rho_x*invrhob - rho*invrhob*invrhob*rhob_x);
-    fpdtype_t T_y = Tb_y * (p/pb-rho/rhob) + Tb * (p_y/pb - p/pb/pb*pb_y + rho_y*invrhob - rho*invrhob*invrhob*rhob_y);
+    fpdtype_t T_x = Tb_x * (p/pb-rho/rhob) + Tb * (p_x/pb - p/pb/pb*pb_x - rho_x*invrhob + rho*invrhob*invrhob*rhob_x);
+    fpdtype_t T_y = Tb_y * (p/pb-rho/rhob) + Tb * (p_y/pb - p/pb/pb*pb_y - rho_y*invrhob + rho*invrhob*invrhob*rhob_y);
 
     // Negated stress tensor elements
     fpdtype_t txx = -2*mu_c*invrhob*(u_x - ${1.0/3.0}*(u_x + v_y));
@@ -124,21 +124,21 @@
 
     // Compute temperature derivatives (Cv*dT/d[x,y,z])
     fpdtype_t Tb = pb/rhob;
-    fpdtype_t Tb_x = (invrhob*pb_x+pb*invrhob*invrhob+rhob_x);
-    fpdtype_t Tb_y = (invrhob*pb_y+pb*invrhob*invrhob+rhob_y);
-    fpdtype_t Tb_z = (invrhob*pb_z+pb*invrhob*invrhob+rhob_z);
+    fpdtype_t Tb_x = (invrhob*pb_x-pb*invrhob*invrhob*rhob_x);
+    fpdtype_t Tb_y = (invrhob*pb_y-pb*invrhob*invrhob*rhob_y);
+    fpdtype_t Tb_z = (invrhob*pb_z-pb*invrhob*invrhob*rhob_z);
 
-    fpdtype_t T_x = Tb_x * (p/pb-rho/rhob) + Tb * (p_x/pb - p/pb/pb*pb_x + rho_x*invrhob - rho*invrhob*invrhob*rhob_x);
-    fpdtype_t T_y = Tb_y * (p/pb-rho/rhob) + Tb * (p_y/pb - p/pb/pb*pb_y + rho_y*invrhob - rho*invrhob*invrhob*rhob_y);
-    fpdtype_t T_z = Tb_z * (p/pb-rho/rhob) + Tb * (p_z/pb - p/pb/pb*pb_z + rho_z*invrhob - rho*invrhob*invrhob*rhob_z);
+    fpdtype_t T_x = Tb_x * (p/pb-rho/rhob) + Tb * (p_x/pb - p/pb/pb*pb_x - rho_x*invrhob + rho*invrhob*invrhob*rhob_x);
+    fpdtype_t T_y = Tb_y * (p/pb-rho/rhob) + Tb * (p_y/pb - p/pb/pb*pb_y - rho_y*invrhob + rho*invrhob*invrhob*rhob_y);
+    fpdtype_t T_z = Tb_z * (p/pb-rho/rhob) + Tb * (p_z/pb - p/pb/pb*pb_z - rho_z*invrhob + rho*invrhob*invrhob*rhob_z);
 
     // Negated stress tensor elements
-    fpdtype_t txx = -2*mu_c*rcprho*(u_x - ${1.0/3.0}*(u_x + v_y + w_z));
-    fpdtype_t tyy = -2*mu_c*rcprho*(v_y - ${1.0/3.0}*(u_x + v_y + w_z));
-    fpdtype_t tzz = -2*mu_c*rcprho*(w_z - ${1.0/3.0}*(u_x + v_y + w_z));
-    fpdtype_t txy = -mu_c*rcprho*(v_x + u_y);
-    fpdtype_t txz = -mu_c*rcprho*(u_z + w_x);
-    fpdtype_t tyz = -mu_c*rcprho*(w_y + v_z);
+    fpdtype_t txx = -2*mu_c*invrhob*(u_x - ${1.0/3.0}*(u_x + v_y + w_z));
+    fpdtype_t tyy = -2*mu_c*invrhob*(v_y - ${1.0/3.0}*(u_x + v_y + w_z));
+    fpdtype_t tzz = -2*mu_c*invrhob*(w_z - ${1.0/3.0}*(u_x + v_y + w_z));
+    fpdtype_t txy = -mu_c*invrhob*(v_x + u_y);
+    fpdtype_t txz = -mu_c*invrhob*(u_z + w_x);
+    fpdtype_t tyz = -mu_c*invrhob*(w_y + v_z);
 
     fout[0][1] += txx;     fout[1][1] += txy;     fout[2][1] += txz;
     fout[0][2] += txy;     fout[1][2] += tyy;     fout[2][2] += tyz;

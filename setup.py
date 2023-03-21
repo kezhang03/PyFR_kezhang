@@ -108,6 +108,9 @@ package_data = {
     'pyfr.solvers.lineuler.kernels.rsolvers': ['*.mako'],
     'pyfr.solvers.navstokes.kernels': ['*.mako'],
     'pyfr.solvers.navstokes.kernels.bcs': ['*.mako'],
+    'pyfr.solvers.linnavstokes.kernels': ['*.mako'],
+    'pyfr.solvers.linnavstokes.kernels.bcs': ['*.mako'],
+
     'pyfr.tests': ['*.npz']
 }
 

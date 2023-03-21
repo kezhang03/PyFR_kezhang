@@ -2,7 +2,7 @@
 <%inherit file='base'/>
 <%namespace module='pyfr.backends.base.makoutil' name='pyfr'/>
 
-<%pyfr:kernel name='mpiconu' ndim='1'
+<%pyfr:kernel name='basempiconu' ndim='1'
               ulin='in view fpdtype_t[${str(nvars)}]'
               urin='in mpi fpdtype_t[${str(nvars)}]'
               ulout='out view fpdtype_t[${str(nvars)}]'>

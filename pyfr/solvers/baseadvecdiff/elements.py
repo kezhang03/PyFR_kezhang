@@ -15,6 +15,9 @@ class BaseAdvectionDiffusionElements(BaseAdvectionElements):
         if self._soln_in_src_exprs:
             bufs |= {'scal_upts_cpy'}
 
+        if self.linsolver == 'linear':
+            bufs |= {'base_cu_upts'}
+
         return bufs
 
     def set_backend(self, backend, nscalupts, nonce, linoff):

@@ -7,7 +7,7 @@
               urin='in view fpdtype_t[${str(nvars)}]'
               ulout='out view fpdtype_t[${str(nvars)}]'
               urout='out view fpdtype_t[${str(nvars)}]'>
-% for i in range(bnvars):
+% for i in range(nvars):
 % if c['ldg-beta'] == -0.5:
     urout[${i}] = ulin[${i}];
 % elif c['ldg-beta'] == 0.5:

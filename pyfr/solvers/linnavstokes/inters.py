@@ -2,10 +2,12 @@
 
 import numpy as np
 
-from pyfr.solvers.linadvec import (LinearAdvectionBCInters,
-                                        LinearAdvectionIntInters,
-                                        LinearAdvectionMPIInters)
-
+# from pyfr.solvers.linadvec import (LinearAdvectionBCInters,
+#                                         LinearAdvectionIntInters,
+#                                         LinearAdvectionMPIInters)
+from pyfr.solvers.baseadvecdiff import (BaseAdvectionDiffusionBCInters,
+                                        BaseAdvectionDiffusionIntInters,
+                                        BaseAdvectionDiffusionMPIInters)
 
 class TplargsMixin:
     def __init__(self, *args, **kwargs):
@@ -18,7 +20,7 @@ class TplargsMixin:
                              c=self.c, bnvars=self.bnvars)
 
 
-class LinearNavierStokesIntInters(TplargsMixin, LinearAdvectionIntInters):
+class LinearNavierStokesIntInters(TplargsMixin, BaseAdvectionDiffusionIntInters):
     def __init__(self, be, lhs, rhs, elemap, cfg):
         super().__init__(be, lhs, rhs, elemap, cfg)
 
@@ -34,12 +36,11 @@ class LinearNavierStokesIntInters(TplargsMixin, LinearAdvectionIntInters):
             'intcflux', tplargs=self._tplargs, dims=[self.ninterfpts],
             ul=self._scal_lhs, ur=self._scal_rhs,
             gradul=self._vect_lhs, gradur=self._vect_rhs,
-            artviscl=self._artvisc_lhs, artviscr=self._artvisc_rhs,
             nl=self._pnorm_lhs
         )
 
 
-class LinearNavierStokesMPIInters(TplargsMixin, LinearAdvectionMPIInters):
+class LinearNavierStokesMPIInters(TplargsMixin, BaseAdvectionDiffusionMPIInters):
     def __init__(self, be, lhs, rhsrank, rallocs, elemap, cfg):
         super().__init__(be, lhs, rhsrank, rallocs, elemap, cfg)
 
@@ -58,7 +59,7 @@ class LinearNavierStokesMPIInters(TplargsMixin, LinearAdvectionMPIInters):
         )
 
 
-class LinearNavierStokesBaseBCInters(TplargsMixin, LinearAdvectionBCInters):
+class LinearNavierStokesBaseBCInters(TplargsMixin, BaseAdvectionDiffusionBCInters):
     cflux_state = None
 
     def __init__(self, be, lhs, elemap, cfgsect, cfg):

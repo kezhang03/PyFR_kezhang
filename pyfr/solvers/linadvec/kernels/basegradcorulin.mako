@@ -4,7 +4,7 @@
 
 <%include file='pyfr.solvers.baseadvec.kernels.smats'/>
 
-<%pyfr:kernel name='gradcorulin' ndim='2'
+<%pyfr:kernel name='basegradcorulin' ndim='2'
               gradu='inout fpdtype_t[${str(ndims)}][${str(nvars)}]'
               verts='in broadcast-col fpdtype_t[${str(nverts)}][${str(ndims)}]'
               upts='in broadcast-row fpdtype_t[${str(ndims)}]'

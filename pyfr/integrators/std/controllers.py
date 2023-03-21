@@ -20,6 +20,7 @@ class BaseStdController(BaseStdIntegrator):
         """
         # Get solver info
         self.linsolver = self.cfg.get('solver','solver-type','None')
+        self.linear_type = self.cfg.get('solver','system','None')
         """
         MODIFICATION FOR LINEAR SOLVER
         """
@@ -87,7 +88,7 @@ class StdNoneController(BaseStdController):
         """
         # Calculate baseflow gradients
         # zk: use self.nacptsteps instead of t, which is better for restart
-        if self.linsolver == 'linear' and self.nacptsteps == 0:
+        if self.linsolver == 'linear' and self.nacptsteps == 0 and self.linear_type == 'linear-euler':
             self.system.compute_baseflow_grads(self.tcurr, self._idxcurr)
 
         """

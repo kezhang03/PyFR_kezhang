@@ -30,7 +30,7 @@ class BaseAdvectionElements(BaseElements):
         if linsolver == 'linear':
             if linear_type == 'linear-euler':
                 self._be.pointwise.register(
-                    'pyfr.solvers.baseadvec.kernels.cu'
+                    'pyfr.solvers.baseadvec.kernels.culee'
                 )
             else:
                 self._be.pointwise.register(
@@ -108,16 +108,16 @@ class BaseAdvectionElements(BaseElements):
         if linsolver == 'linear':
             # First creat a kernel to calculate C@U
             if linear_type == 'linear-euler':
-                kernels['cu'] = lambda: self._be.kernel(
-                    'cu', tplargs=srctplargs,
-                    dims=[self.nupts, self.neles], u=self.scal_upts[0],
+                kernels['cu'] = lambda uin: self._be.kernel(
+                    'culee', tplargs=srctplargs,
+                    dims=[self.nupts, self.neles], u=self.scal_upts[uin],
                     divub=self._vect_upts, cu=self._base_cu_upts
                 )
             else:
-                kernels['cu'] = lambda: self._be.kernel(
+                kernels['cu'] = lambda uin: self._be.kernel(
                     'culns', tplargs=srctplargs,
-                    dims=[self.nupts, self.neles], u=self.scal_upts[0],
-                    divub=self._vect_upts, cu=self._base_cu_upts
+                    dims=[self.nupts, self.neles], u=self.scal_upts[uin],
+                    grad_uin=self._vect_upts, cu=self._base_cu_upts
                 )
 
             kernels['negdivconf'] = lambda fout: self._be.kernel(

@@ -2,10 +2,10 @@
 <%inherit file='base'/>
 <%namespace module='pyfr.backends.base.makoutil' name='pyfr'/>
 
-<%pyfr:kernel name='cu' ndim='2'
+<%pyfr:kernel name='culee' ndim='2'
               t='scalar fpdtype_t'
               u='in fpdtype_t[${str(nvars)}]'
-              divub='in fpdtype_t[${str(bnvars)}][${str(bnvars)}]'
+              divub='in fpdtype_t[${str(ndims)}][${str(nvars)}]'
               cu='out fpdtype_t[${str(bnvars)}]'>
 
     // Compute the average quantities

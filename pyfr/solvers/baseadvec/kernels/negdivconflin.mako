@@ -14,4 +14,8 @@
 % for i, ex in enumerate(srcex):
     tdivtconf[${i}] = -rcpdjac*tdivtconf[${i}] + ${ex} - cu[${i}];
 % endfor
+% for j in range(bnvars):
+    // set baseflow flux to 0
+    tdivtconf[${j + bnvars}] = 0;
+% endfor
 </%pyfr:kernel>

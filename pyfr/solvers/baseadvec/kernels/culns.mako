@@ -5,7 +5,7 @@
 <%pyfr:kernel name='culns' ndim='2'
               t='scalar fpdtype_t'
               u='in fpdtype_t[${str(nvars)}]'
-              grad_uin='in fpdtype_t[${str(bnvars)}][${str(bnvars)}]'
+              grad_uin='in fpdtype_t[${str(ndims)}][${str(nvars)}]'
               cu='out fpdtype_t[${str(bnvars)}]'>
 
     // Compute the average quantities
@@ -68,7 +68,7 @@
   cu[3] =  (${c['gamma'] - 1})*u[3]*(ub_x + vb_y) + (${1 - c['gamma']})*(v[0]*pb_x + v[1]*pb_y);
   cu[3] += (${c['gamma'] - 1}) * (t0xx * u_x + t0xy * (u_y + v_x) + t0yy * v_y);
   cu[3] += (${c['gamma'] - 1}) * (txx * ub_x + txy * (ub_y + vb_x) +  tyy * vb_y);
-
+  //printf("%f ", grad_uin[0][1]);
 % elif ndims == 3:
 % if visc_corr == 'sutherland':
     // Compute the temperature and viscosity

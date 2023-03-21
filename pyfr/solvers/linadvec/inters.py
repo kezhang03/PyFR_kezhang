@@ -19,10 +19,10 @@ class LinearAdvectionIntInters(TplargsMixin, BaseAdvectionDiffusionIntInters):
     def __init__(self, be, lhs, rhs, elemap, cfg):
         super().__init__(be, lhs, rhs, elemap, cfg)
 
-        be.pointwise.register('pyfr.solvers.linadvec.kernels.intconu')
+        be.pointwise.register('pyfr.solvers.linadvec.kernels.baseintconu')
 
         self.kernels['con_u'] = lambda: be.kernel(
-            'intconu', tplargs=self._tplargs, dims=[self.ninterfpts],
+            'baseintconu', tplargs=self._tplargs, dims=[self.ninterfpts],
             ulin=self._scal_lhs, urin=self._scal_rhs,
             ulout=self._vect_lhs, urout=self._vect_rhs
         )
@@ -31,10 +31,10 @@ class LinearAdvectionMPIInters(TplargsMixin, BaseAdvectionDiffusionMPIInters):
     def __init__(self, be, lhs, rhsrank, rallocs, elemap, cfg):
         super().__init__(be, lhs, rhsrank, rallocs, elemap, cfg)
 
-        be.pointwise.register('pyfr.solvers.linadvec.kernels.mpiconu')
+        be.pointwise.register('pyfr.solvers.linadvec.kernels.basempiconu')
 
         self.kernels['con_u'] = lambda: be.kernel(
-            'mpiconu', tplargs=self._tplargs, dims=[self.ninterfpts],
+            'basempiconu', tplargs=self._tplargs, dims=[self.ninterfpts],
             ulin=self._scal_lhs, urin=self._scal_rhs, ulout=self._vect_lhs
         )
 
@@ -45,10 +45,10 @@ class LinearAdvectionBCInters(TplargsMixin, BaseAdvectionDiffusionBCInters):
         # Additional BC specific template arguments
         #self._tplargs['bctype'] = self.type
 
-        be.pointwise.register('pyfr.solvers.linadvec.kernels.bcconu')
+        be.pointwise.register('pyfr.solvers.linadvec.kernels.basebcconu')
 
         self.kernels['con_u'] = lambda: be.kernel(
-            'bcconu', tplargs=self._tplargs, dims=[self.ninterfpts],
+            'basebcconu', tplargs=self._tplargs, dims=[self.ninterfpts],
             extrns=self._external_args, ulin=self._scal_lhs,
             ulout=self._vect_lhs, nlin=self._pnorm_lhs,
             **self._external_vals

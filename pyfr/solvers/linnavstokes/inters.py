@@ -102,4 +102,13 @@ class LinearNavierStokesCharRiemInvBCInters(LinearNavierStokesBaseBCInters):
             ['rho', 'p', 'u', 'v', 'w'][:self.ndims + 2], lhs
         )
 
+class LinearNavierStokesDirichletBCInters(LinearNavierStokesBaseBCInters):
+    type = 'dirichlet'
+    cflux_state = 'ghost'
 
+    def __init__(self, be, lhs, elemap, cfgsect, cfg):
+        super().__init__(be, lhs, elemap, cfgsect, cfg)
+
+        self.c |= self._exp_opts(
+            ['rho', 'p', 'u', 'v', 'w'][:self.ndims + 2], lhs
+        )

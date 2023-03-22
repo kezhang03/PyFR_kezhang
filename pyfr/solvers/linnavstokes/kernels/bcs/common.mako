@@ -12,3 +12,9 @@
     gradur[${i}][${j}] = gradul[${i}][${j}];
 % endfor
 </%pyfr:macro>
+
+<%pyfr:macro name='bc_common_base_var_copy' params='ul, ur'>
+% for i in range(bnvars):
+    ur[${i + bnvars}] = ul[${i + bnvars}];
+% endfor
+</%pyfr:macro>

@@ -100,6 +100,7 @@ class BaseElements:
 
             for i, v in enumerate(self.pri_to_con(ics, rhob, self.cfg)):
                 self.scal_upts[:, i, :] = v
+                print(i)
 
         """
         MODIFICATION FOR LINEAR SOLVER
@@ -122,9 +123,28 @@ class BaseElements:
     """
     MODIFICATION FOR LINEAR SOLVER
     """
-    def set_baseflow_from_soln(self, solnmat, cfg):
+    def set_baseflow_from_soln(self, solnmat, solncfg):
         # Recreate the existing solution basis
-        raise NotImplementedError('to be finished')
+        solnb = self.basis.__class__(None, solncfg)
+
+        # Form the interpolation operator
+        interp = solnb.ubasis.nodal_basis_at(self.basis.upts)
+
+        # Sizes
+        nupts, neles, bnvars, nvars = self.nupts, self.neles, self.bnvars, self.nvars
+
+        # Swap axes for con_to_pri
+        solnmat = np.swapaxes(solnmat, 0, 1)
+        # Transform baseflow from con to pri
+        solnmat = np.array(self.con_to_pri_for_base(solnmat, solncfg))
+        # Swap bcak
+        solnmat = np.swapaxes(solnmat, 0, 1)
+
+        # Apply and reshape
+        self.scal_upts = interp @ solnmat.reshape(solnb.nupts, -1)
+        self.scal_upts = self.scal_upts.reshape(nupts, bnvars, neles)
+        # Expand the size to match the linaer scal_upts
+        self.scal_upts = np.concatenate([np.zeros((nupts, bnvars, neles)), self.scal_upts], axis=1)
 
     def set_baseflow_from_cfg(self):
 

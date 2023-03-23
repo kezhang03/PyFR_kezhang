@@ -41,6 +41,18 @@ class BaseFluidElements:
         vs = [rhov/rhob for rhov in cons[1:ptr-1]]
         return [rho] + vs + [p]
 
+    @staticmethod
+    def con_to_pri_for_base(cons, cfg):
+        rho, E = cons[0], cons[-1]
+
+        # Divide momentum components by rho
+        vs = [rhov / rho for rhov in cons[1:-1]]
+
+        # Compute the pressure
+        gamma = cfg.getfloat('constants', 'gamma')
+        p = (gamma - 1) * (E - 0.5 * rho * sum(v * v for v in vs))
+
+        return [rho] + vs + [p]
 
 class LinearEulerElements(BaseFluidElements, LinearAdvectionElements):
     def set_backend(self, *args, **kwargs):

@@ -113,7 +113,6 @@ class BaseAdvectionDiffusionSystem(BaseAdvectionSystem):
         MODIFICATION FOR LINEAR SOLVER
         """
         if self.linsolver == 'linear':
-            print("culns on")
             for l in k['eles/cu']:
                 g3.add(l, deps=deps(l,'eles/tdivtconf'))
                 # g2.add_all(k['eles/cu'], deps=k['eles/tdivtconf'])

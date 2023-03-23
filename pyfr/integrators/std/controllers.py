@@ -7,6 +7,7 @@ import numpy as np
 from pyfr.integrators.std.base import BaseStdIntegrator
 from pyfr.mpiutil import get_comm_rank_root, mpi
 
+from pyfr.util import memoize
 
 class BaseStdController(BaseStdIntegrator):
     def __init__(self, *args, **kwargs):
@@ -104,6 +105,137 @@ class StdNoneController(BaseStdController):
 
             # We are not adaptive, so accept every step
             self._accept_step(dt, idxcurr)
+
+class StdSteadyController(BaseStdController):
+    controller_name = 'steady'
+
+    def __init__(self,  *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # get input parameters
+        self.delta = self.cfg.getfloat('solver-steady','delta')
+        self.X = self.cfg.getfloat('solver-steady','X')
+        self.coef = 1 / (1 + self.X*self.delta)
+        dt = self._dt
+        # compute SFD matrix
+        self.M11 = self.coef * ( 1.0 + self.X * self.delta * np.exp(-(self.X + 1.0/self.delta)*dt))
+        self.M12 = self.coef * (self.X * self.delta*(1.0 - np.exp(-(self.X + 1.0/self.delta)*dt)))
+        self.M21 = self.coef*(1.0 - np.exp(-(self.X + 1.0/self.delta)*dt))
+        self.M22 = self.coef*(self.X * self.delta + np.exp(-(self.X + 1.0/self.delta)*dt))
+
+    @property
+    def controller_needs_errest(self):
+        return False
+
+    def advance_to(self, t):
+        # zk: this t is the output time gap
+        if t < self.tcurr:
+            raise ValueError('Advance time is in the past')
+        while self.tcurr < t:
+            # Decide on the time step
+            dt = max(min(t - self.tcurr, self._dt), self.dtmin)
+            # Take the step
+            idxcurr = self.step(self.tcurr, dt)
+            # We are not adaptive, so accept every step
+            self._accept_step(dt, idxcurr)
+
+            if self.nacptsteps == 1 :
+                self.init_SFD()
+            else:
+                self.compute_SFD()
+
+
+    def init_SFD(self):
+
+        # self.scal_upts_steady[q0Bar] = self.scal_upts[idxcurr]
+        # initialize qBar0
+        self.q0Bar = 1
+        self.q1 = 0
+        self.q1Bar = 2
+        self.init_flag = 1
+        add_steady_copy = self._add_steady_copy
+        q0Bar = self.q0Bar
+        add_steady_copy(0.0, q0Bar, 1.0, self._idxcurr)
+
+    def _add_steady_copy(self, *args, subdims=None):
+        self._addv_steady_copy(args[::2], args[1::2], subdims=subdims)
+
+
+    def _addv_steady_copy(self, consts, regidxs, subdims=None):
+        axnpby_s_copy = self._get_axnpby_kerns_s_copy(*regidxs, subdims=subdims)
+        # Bind the arguments
+
+        for k in axnpby_s_copy:
+            k.bind(*consts)
+
+        self.backend.run_kernels(axnpby_s_copy)
+    #        print(self.system.ele_banks_steady[0][1].__dict__)
+
+    @memoize
+    def _get_axnpby_kerns_s_copy(self, *rs, subdims=None):
+
+        ebs = self.system.ele_banks_steady
+        eb = self.system.ele_banks
+        if self.init_flag:
+            q0Bar = rs[1]
+            idxcurr = rs[0]
+            kerns =  [self.backend.kernel('axnpby', *[ebs[i][q0Bar]],
+                        *[eb[i][idxcurr]], subdims=subdims) for i in range(len(eb))]
+            self.init_flag = None
+        else:
+            idxcurr = rs[1]
+            q1 = rs[0]
+            kerns =  [self.backend.kernel('axnpby', *[eb[i][idxcurr]],
+                        *[ebs[i][q1]], subdims=subdims) for i in range(len(eb))]
+#            print('copy')
+        # they should be of equal length
+        #print('steady',len(self.system.ele_banks_steady))
+        #print('original',len(self.system.ele_banks))
+        return kerns
+
+
+    def compute_SFD(self):
+        ebs = self.system.ele_banks_steady
+        eb = self.system.ele_banks
+        add_steady = self._add_steady
+        add_steady_copy = self. _add_steady_copy
+        q1 = self.q1
+
+        idxcurr = self._idxcurr
+
+        q0Bar = self.q0Bar
+        add_steady(0.0, q1, self.M11, idxcurr, self.M12, q0Bar)
+        #ebs[q1] = self.M11 * eb[idxcurr] + self.M12 * ebs[q0Bar]
+        q1Bar = self.q1Bar
+        add_steady(0.0, q1Bar, self.M21, idxcurr, self.M22, q0Bar)
+        #ebs[q1Bar] = self.M21 * eb[idxcurr] + self.M22 * ebs[q0Bar]
+
+        add_steady_copy(0.0, idxcurr, 1.0, q1)
+        #self.system.ele_banks[idxcurr] = self.system.ele_banks_steady[q1]
+
+        self.q0Bar, self.q1Bar = self.q1Bar, self.q0Bar
+
+    def _add_steady(self, *args, subdims=None):
+        self._addv_steady(args[::2], args[1::2], subdims=subdims)
+
+    def _addv_steady(self, consts, regidxs, subdims=None):
+        axnpby_s = self._get_axnpby_kerns_s(*regidxs, subdims=subdims)
+        # Bind the arguments
+        for k in axnpby_s:
+            k.bind(*consts)
+        self.backend.run_kernels(axnpby_s)
+
+    @memoize
+    def _get_axnpby_kerns_s(self, *rs, subdims=None):
+        q0Bar = rs[2]
+        idxcurr = rs[1]
+        op = rs [0]
+        ebs = self.system.ele_banks_steady
+        eb = self.system.ele_banks
+        #i = len(eb)
+        kerns =  [self.backend.kernel('axnpby', *[ebs[i][op]],
+                    *[eb[i][idxcurr]], *[ebs[i][q0Bar]], subdims=subdims) for i in range(len(eb))]
+        return kerns
 
 
 class StdPIController(BaseStdController):

@@ -45,6 +45,18 @@ class BaseSystem:
         self.ele_ndofs = [e.neles*e.nupts*e.nvars for e in eles]
         self.ele_shapes = [(e.nupts, e.nvars, e.neles) for e in eles]
 
+        """
+        MODIFICATION FOR STEADY SOLVER
+        """
+        # Identify the steady solver
+        self.steadysolver = self.cfg.get('solver', 'steady-solver', 'None')
+        if self.steadysolver != 'None':
+            self.ele_banks_steady = [e.scal_upts_steady for e in eles]
+        """
+        MODIFICATION FOR STEADY SOLVER
+        """
+
+
         # Get all the solution point locations for the elements
         self.ele_ploc_upts = [e.ploc_at_np('upts') for e in eles]
 

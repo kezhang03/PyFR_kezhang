@@ -47,6 +47,15 @@ class BaseElements:
         MODIFICATION FOR LINEAR SOLVER
         """
 
+        """
+        MODIFICATION FOR STEADY SOLVER
+        """
+        # Identify the steady solver
+        self.steadysolver = self.cfg.get('solver', 'steady-solver', 'None')
+        """
+        MODIFICATION FOR STEADY SOLVER
+        """
+
         # Instantiate the basis class
         self.basis = basis = basiscls(nspts, cfg)
 
@@ -106,6 +115,16 @@ class BaseElements:
         MODIFICATION FOR LINEAR SOLVER
         """
 
+        """
+        MODIFICATION FOR STEADY SOLVER
+        """
+        if self.steadysolver != 'None':
+            self.scal_upts_steady = np.empty((self.nupts, self.nvars, self.neles))
+        """
+        MODIFICATION FOR STEADY SOLVER
+        """
+
+
     def set_ics_from_soln(self, solnmat, solncfg):
         # Recreate the existing solution basis
         solnb = self.basis.__class__(None, solncfg)
@@ -119,6 +138,17 @@ class BaseElements:
         # Apply and reshape
         self.scal_upts = interp @ solnmat.reshape(solnb.nupts, -1)
         self.scal_upts = self.scal_upts.reshape(nupts, nvars, neles)
+
+        """
+        MODIFICATION FOR STEADY SOLVER
+        """
+        if self.steadysolver != 'None':
+            self.scal_upts_steady = interp @ solnmat.reshape(solnb.nupts, -1)
+            self.scal_upts_steady = self.scal_upts.reshape(nupts, nvars, neles)
+
+        """
+        MODIFICATION FOR STEADY SOLVER
+        """
 
     """
     MODIFICATION FOR LINEAR SOLVER
@@ -304,6 +334,17 @@ class BaseElements:
         self.scal_upts = [backend.matrix(self.scal_upts.shape,
                                          self.scal_upts, tags={'align'})
                           for i in range(nscalupts)]
+
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
+        if self.steadysolver != 'None':
+            self.scal_upts_steady = [backend.matrix(self.scal_upts_steady.shape,
+                                             self.scal_upts_steady, tags={'align'})
+                              for i in range(3)]
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
 
         # Find/allocate space for a solution-sized scalar
         tags = self.scal_upts[0].tags

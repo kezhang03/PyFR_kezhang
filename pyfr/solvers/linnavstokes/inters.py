@@ -2,9 +2,6 @@
 
 import numpy as np
 
-# from pyfr.solvers.linadvec import (LinearAdvectionBCInters,
-#                                         LinearAdvectionIntInters,
-#                                         LinearAdvectionMPIInters)
 from pyfr.solvers.baseadvecdiff import (BaseAdvectionDiffusionBCInters,
                                         BaseAdvectionDiffusionIntInters,
                                         BaseAdvectionDiffusionMPIInters)

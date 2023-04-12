@@ -106,6 +106,17 @@ class BaseAdvectionBCInters(BaseInters):
         subs |= dict(x='ploc[0]', y='ploc[1]', z='ploc[2]')
         subs |= dict(abs='fabs', pi=str(math.pi))
 
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
+        subs |= dict(q_rho_r='q[0]', q_rho_i='q[1]', q_u_r='q[2]', q_u_i='q[3]', q_v_r='q[4]', q_v_i='q[5]',
+                     q_p_r='q[6]', q_p_i='q[7]')
+        # leave the w velocity in the end
+        subs |= dict(q_w_r='q[8]', q_w_i='q[9]')
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
+
         exprs = {}
         for k in opts:
             if k in default:
@@ -120,4 +131,54 @@ class BaseAdvectionBCInters(BaseInters):
 
             self._set_external('ploc', spec, value=value)
 
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
+        if (any('q' in ex for ex in exprs.values()) and
+                'q' not in self._external_args):
+                self.q_dim = (self.ndims + 2) * 2
+                spec_q = f'in fpdtype_t[{self.q_dim}]'
+                # on-grid interpolated data
+                q_intp_mesh = self._const_mat_inlet(lhs, 'get_ploc_for_inter')
+                self._set_external('q', spec_q, value=q_intp_mesh)
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
         return exprs
+
+
+    # def _exp_opts_inlet(self, opts, lhs, default={}):
+    #     cfg, sect = self.cfg, self.cfgsect
+    #
+    #     subs = cfg.items('constants')
+    #     subs |= dict(x='ploc[0]', y='ploc[1]', z='ploc[2]')
+    #     subs |= dict(abs='fabs', pi=str(math.pi))
+    #     subs |= dict(q_rho_r='q[0]', q_rho_i='q[1]', q_u_r='q[2]', q_u_i='q[3]', q_v_r='q[4]', q_v_i='q[5]', q_p_r='q[6]',q_p_i='q[7]')
+    #     # leave the w velocity in the end
+    #     subs |= dict(q_w_r='q[8]', q_w_i='q[9]')
+    #
+    #     exprs = {}
+    #     for k in opts:
+    #         if k in default:
+    #             exprs[k] = cfg.getexpr(sect, k, default[k], subs=subs)
+    #         else:
+    #             exprs[k] = cfg.getexpr(sect, k, subs=subs)
+    #
+    #     if (any('q' in ex for ex in exprs.values()) and
+    #         'q' not in self._external_args):
+    #
+    #         spec = f'in fpdtype_t[{self.ndims}]'
+    #         # spec for qs
+    #         self.q_dim = (self.ndims+2)*2
+    #         spec_q = f'in fpdtype_t[{self.q_dim}]'
+    #
+    #         coords = self._const_mat(lhs, 'get_ploc_for_inter')
+    #         # on-grid interpolated data
+    #         q_intp_mesh = self._const_mat_inlet(lhs, 'get_ploc_for_inter')
+    #
+    #         # set externel 'ploc', sending coordinates data to kernel
+    #         self._set_external('ploc', spec, value=coords)
+    #         # set externel 'q', sending perturbation eigenfunction to kernel
+    #         self._set_external('q', spec_q, value=q_intp_mesh)
+    #         print(exprs)
+    #     return exprs

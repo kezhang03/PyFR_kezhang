@@ -109,7 +109,6 @@ class BaseElements:
 
             for i, v in enumerate(self.pri_to_con(ics, rhob, self.cfg)):
                 self.scal_upts[:, i, :] = v
-                print(i)
 
         """
         MODIFICATION FOR LINEAR SOLVER

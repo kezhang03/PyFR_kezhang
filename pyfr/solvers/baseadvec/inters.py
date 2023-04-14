@@ -134,8 +134,8 @@ class BaseAdvectionBCInters(BaseInters):
         """
         MODIFICATION FOR LINEAR SOLVER
         """
-        if (any('q' in ex for ex in exprs.values()) and
-                'q' not in self._external_args):
+        if (any('q[' in ex for ex in exprs.values()) and
+                'q[' not in self._external_args):
                 self.q_dim = (self.ndims + 2) * 2
                 spec_q = f'in fpdtype_t[{self.q_dim}]'
                 # on-grid interpolated data

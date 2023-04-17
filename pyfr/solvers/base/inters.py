@@ -108,6 +108,7 @@ class BaseInters:
         # plot all interpolated perturbation
         # for i in range(0, (self.ndims+2)):
         #     plt.scatter(coords[1,:], q_intp[2 * i, :], label='interpolation')
+        #     plt.scatter(coords[1,:], q_intp[2 * i+1, :], label='interpolation')
         #     plt.legend(loc='best')
         #     plt.show()
 

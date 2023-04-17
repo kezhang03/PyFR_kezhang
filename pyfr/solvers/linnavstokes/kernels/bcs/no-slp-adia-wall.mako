@@ -56,6 +56,7 @@
     fpdtype_t T_y = Tb_y * (p/pb-rho/rhob) + Tb * (p_y/pb - p/pb/pb*pb_y - rho_y*invrhob + rho*invrhob*invrhob*rhob_y);
 
     // Copy all fluid-side gradients across to wall-side gradients
+    // We have already copied the baseflow gradient before
     ${pyfr.expand('bc_common_grad_copy', 'ul', 'nl', 'grad_ul', 'grad_ur')};
 
     // Correct copied across in-fluid temp gradients to in-wall gradients
@@ -112,3 +113,5 @@
 
 % endif
 </%pyfr:macro>
+
+<%pyfr:alias name='bc_ldg_base_grad_state' func='bc_common_base_grad_copy'/>

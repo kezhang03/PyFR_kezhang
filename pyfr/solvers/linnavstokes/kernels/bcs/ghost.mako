@@ -8,6 +8,9 @@
 <%pyfr:macro name='bc_common_flux_state' params='ul, gradul, nl, magnl'>
     // Viscous states
     fpdtype_t ur[${nvars}], gradur[${ndims}][${nvars}];
+    // MODIFICATION FOR LINEAR SOLVER
+    ${pyfr.expand('bc_ldg_base_grad_state', 'ul', 'nl', 'gradul', 'gradur')};
+    // MODIFICATION FOR LINEAR SOLVER
     ${pyfr.expand('bc_ldg_state', 'ul', 'nl', 'ur')};
     ${pyfr.expand('bc_ldg_grad_state', 'ul', 'nl', 'gradul', 'gradur')};
 

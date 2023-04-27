@@ -27,6 +27,11 @@ class BaseInters:
         """
         if cfg.get('solver','solver-type','None') == 'linear':
             self.bnvars = next(iter(elemap.values())).bnvars
+        self.UDI_datatype = cfg.get('soln-UDI', 'UDI-datatype', 'None')
+        if self.UDI_datatype == 'complex':
+            self.q_dim = (self.ndims + 2) * 2
+        else:
+            self.q_dim = (self.ndims + 2)
         """
         MODIFICATION FOR LINEAR SOLVER
         """
@@ -100,15 +105,22 @@ class BaseInters:
         # we need to separate the real and imagine part
         q_intp = []
         for q in q_tmp:
-            q_intp = np.concatenate((q_intp, np.real(q)))
-            q_intp = np.concatenate((q_intp, np.imag(q)))
-
-        q_dim = (self.ndims+2)*2
-        q_intp = np.reshape(q_intp, (q_dim, self.ninterfpts))
+            if self.UDI_datatype == 'complex':
+                q_intp = np.concatenate((q_intp, np.real(q)))
+                q_intp = np.concatenate((q_intp, np.imag(q)))
+            else:
+                q_intp = np.concatenate((q_intp,q))
+        q_intp = np.reshape(q_intp, (self.q_dim, self.ninterfpts))
         # plot all interpolated perturbation
         # for i in range(0, (self.ndims+2)):
         #     plt.scatter(coords[1,:], q_intp[2 * i, :], label='interpolation')
         #     plt.scatter(coords[1,:], q_intp[2 * i+1, :], label='interpolation')
+        #     plt.legend(loc='best')
+        #     plt.show()
+        # plot all interpolated velocity profile
+        # for i in range(0, (self.ndims+2)):
+        #     plt.scatter(coords[1,:], q_intp[i, :], label='interpolation')
+        #     plt.plot(y, qs[i], label='input')
         #     plt.legend(loc='best')
         #     plt.show()
 

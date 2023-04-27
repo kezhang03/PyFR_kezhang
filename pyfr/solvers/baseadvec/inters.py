@@ -109,10 +109,15 @@ class BaseAdvectionBCInters(BaseInters):
         """
         MODIFICATION FOR LINEAR SOLVER
         """
-        subs |= dict(q_rho_r='q[0]', q_rho_i='q[1]', q_u_r='q[2]', q_u_i='q[3]', q_v_r='q[4]', q_v_i='q[5]',
-                     q_p_r='q[6]', q_p_i='q[7]')
-        # leave the w velocity in the end
-        subs |= dict(q_w_r='q[8]', q_w_i='q[9]')
+        if self.UDI_datatype == 'complex':
+            subs |= dict(q_rho_r='q[0]', q_rho_i='q[1]', q_u_r='q[2]', q_u_i='q[3]', q_v_r='q[4]', q_v_i='q[5]',
+                         q_p_r='q[6]', q_p_i='q[7]')
+            # leave the w velocity in the end
+            subs |= dict(q_w_r='q[8]', q_w_i='q[9]')
+        if self.UDI_datatype == 'real':
+            subs |= dict(q_rho='q[0]', q_u='q[1]', q_v='q[2]', q_p='q[3]')
+            # leave the w velocity in the end
+            subs |= dict(q_w='q[4]')
         """
         MODIFICATION FOR LINEAR SOLVER
         """
@@ -136,7 +141,6 @@ class BaseAdvectionBCInters(BaseInters):
         """
         if (any('q[' in ex for ex in exprs.values()) and
                 'q[' not in self._external_args):
-                self.q_dim = (self.ndims + 2) * 2
                 spec_q = f'in fpdtype_t[{self.q_dim}]'
                 # on-grid interpolated data
                 q_intp_mesh = self._const_mat_inlet(lhs, 'get_ploc_for_inter')

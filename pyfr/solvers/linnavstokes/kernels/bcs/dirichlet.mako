@@ -15,6 +15,6 @@
 
 <%pyfr:alias name='bc_ldg_state' func='bc_rsolve_state'/>
 
-<%pyfr:alias name='bc_ldg_grad_state' func='bc_common_grad_zero'/>
+<%pyfr:alias name='bc_ldg_grad_state' func='bc_common_grad_copy'/>
 
 <%pyfr:alias name='bc_ldg_base_grad_state' func='bc_common_base_grad_copy'/>

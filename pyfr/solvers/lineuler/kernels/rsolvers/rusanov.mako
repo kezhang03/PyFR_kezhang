@@ -17,7 +17,8 @@
     fpdtype_t nv = ${pyfr.dot('n[{i}]', 'vl[{i}] + vr[{i}]', i=ndims)};
 
     // Estimate the maximum wave speed / 2
-    fpdtype_t a = sqrt(${0.25*c['gamma']}*(pl + pr + pbl + pbr)/(ul[0] + ur[0] + ul[${bnvars}] + ur[${bnvars}]))
+    // 2023/05/08: remove the perturbation variables in estimating the wave speed
+    fpdtype_t a = sqrt(${0.25*c['gamma']}*(pbl + pbr)/(ul[${bnvars}] + ur[${bnvars}]))
                 + 0.25*fabs(nv);
 
     // Output

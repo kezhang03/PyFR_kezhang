@@ -34,7 +34,7 @@
 % for i in range(bnvars):
     nf[${i}] = 0.5*(${' + '.join('n[{j}]*(fl[{j}][{i}] + fr[{j}][{i}])'
                                  .format(i=i, j=j) for j in range(ndims))})
-             + a*(ul[${i}] - ur[${i}]);
+             + a*0.5*(ul[${i}] - ur[${i}]);
 
 % endfor
 </%pyfr:macro>

@@ -10,16 +10,25 @@
     fpdtype_t pbl = ul[${nvars-1}];
     fpdtype_t pbr = ur[${nvars-1}];
 
+    fpdtype_t c0l = sqrt(${c['gamma']}*pbl/ul[${bnvars}]);
+    fpdtype_t c0r = sqrt(${c['gamma']}*pbr/ur[${bnvars}]);
+
+    // Estimate the maximum wave speed / 2
+    // Use the Nektar++ way
+    fpdtype_t a = max(abs(ul[${bnvars+1}]-c0l),abs(ul[${bnvars+1}]+c0l));
+    a = max(abs(ur[${bnvars+1}]-c0r), a);
+    a = max(abs(ur[${bnvars+1}]+c0r), a);
+
     ${pyfr.expand('inviscid_flux', 'ul', 'fl', 'pl', 'vl')};
     ${pyfr.expand('inviscid_flux', 'ur', 'fr', 'pr', 'vr')};
 
     // Sum the left and right velocities and take the normal
-    fpdtype_t nv = ${pyfr.dot('n[{i}]', 'vl[{i}] + vr[{i}]', i=ndims)};
+    // fpdtype_t nv = ${pyfr.dot('n[{i}]', 'vl[{i}] + vr[{i}]', i=ndims)};
 
     // Estimate the maximum wave speed / 2
     // 2023/05/08: remove the perturbation variables in estimating the wave speed
-    fpdtype_t a = sqrt(${0.25*c['gamma']}*(pbl + pbr)/(ul[${bnvars}] + ur[${bnvars}]))
-                + 0.25*fabs(nv);
+    //fpdtype_t a = sqrt(${0.25*c['gamma']}*(pbl + pbr)/(ul[${bnvars}] + ur[${bnvars}]))
+    //            + 0.25*fabs(nv);
 
     // Output
 % for i in range(bnvars):

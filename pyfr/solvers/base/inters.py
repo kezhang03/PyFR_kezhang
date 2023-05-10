@@ -93,12 +93,15 @@ class BaseInters:
         fmt = self.cfg.get('soln-UDI', 'UDI-format', 'None')
         # load perturbation
         # !! note that our data is from large to small, so we flipped the data !!
-        qs = [np.flip(scipy.io.loadmat(os.path.join(dirname, filename + fmt))[filename]) for filename in
+        qs = [(scipy.io.loadmat(os.path.join(dirname, filename + fmt))[filename]) for filename in
               filenames_list]
+        # qs = [np.flip(scipy.io.loadmat(os.path.join(dirname, filename + fmt))[filename]) for filename in
+        #       filenames_list]
         # load coordinates of perturbation
         coord_filename = self.cfg.get('soln-UDI', 'UDI-coords-filename', 'None')
         y = scipy.io.loadmat(os.path.join(dirname, coord_filename+fmt))[coord_filename]
-        y = np.flip(np.squeeze(y))
+        # y = np.flip(np.squeeze(y))
+        y = np.squeeze(y)
         cs = [scipy.interpolate.CubicSpline(y, q) for q in qs]
         # interpolate value at inlet boundary
         q_tmp = [c(coords[1,:]).flatten() for c in cs]

@@ -102,7 +102,7 @@ class BaseInters:
         y = scipy.io.loadmat(os.path.join(dirname, coord_filename+fmt))[coord_filename]
         # y = np.flip(np.squeeze(y))
         y = np.squeeze(y)
-        cs = [scipy.interpolate.CubicSpline(y, q) for q in qs]
+        cs = [scipy.interpolate.interp1d(y, q.flatten(), bounds_error=False, fill_value = q[-1]) for q in qs]
         # interpolate value at inlet boundary
         q_tmp = [c(coords[1,:]).flatten() for c in cs]
         # we need to separate the real and imagine part
@@ -118,6 +118,7 @@ class BaseInters:
         # for i in range(0, (self.ndims+2)):
         #     plt.scatter(coords[1,:], q_intp[2 * i, :], label='interpolation')
         #     plt.scatter(coords[1,:], q_intp[2 * i+1, :], label='interpolation')
+        #     plt.plot(y, np.real(qs[i]))
         #     plt.legend(loc='best')
         #     plt.show()
         # plot all interpolated velocity profile

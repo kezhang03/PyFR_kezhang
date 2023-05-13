@@ -65,9 +65,14 @@
   // momentum equation (y)
   cu[2] =  u[0]*(u[5]*vb_x + u[6]*vb_y) + u[4]*(v[1]*vb_x + v[2]*vb_y);
   // energy equation
-  cu[3] =  (${c['gamma'] - 1})*u[3]*(ub_x + vb_y) + (${1 - c['gamma']})*(v[0]*pb_x + v[1]*pb_y);
-  cu[3] += (${c['gamma'] - 1}) * (t0xx * u_x + t0xy * (u_y + v_x) + t0yy * v_y);
-  cu[3] += (${c['gamma'] - 1}) * (txx * ub_x + txy * (ub_y + vb_x) +  tyy * vb_y);
+  // cu[3] =  (${c['gamma'] - 1})*u[3]*(ub_x + vb_y) + (${1 - c['gamma']})*(v[0]*pb_x + v[1]*pb_y);
+  // cu[3] += (${c['gamma'] - 1}) * (t0xx * u_x + t0xy * (u_y + v_x) + t0yy * v_y);
+  // cu[3] += (${c['gamma'] - 1}) * (txx * ub_x + txy * (ub_y + vb_x) +  tyy * vb_y);
+  cu[3] = (v[0]*pb_x + v[1]*pb_y) - u[3]*(ub_x + vb_y);
+  cu[3] += t0xx * u_x + t0xy * (u_y + v_x) + t0yy * v_y;
+  cu[3] += txx * ub_x + txy * (ub_y + vb_x) +  tyy * vb_y;
+  cu[3] *= (1 - ${c['gamma']});
+
   //printf("%f ", grad_uin[0][1]);
 % elif ndims == 3:
 % if visc_corr == 'sutherland':
@@ -134,8 +139,12 @@
   cu[1] =  u[0]*(u[6]*ub_x + u[7]*ub_y + u[8]*ub_z) + u[5]*(v[0]*ub_x + v[1]*ub_y + v[2]*ub_z);
   cu[2] =  u[0]*(u[6]*vb_x + u[7]*vb_y + u[8]*vb_z) + u[5]*(v[0]*vb_x + v[1]*vb_y + v[2]*vb_z);
   cu[3] =  u[0]*(u[6]*wb_x + u[7]*wb_y + u[8]*wb_z) + u[5]*(v[0]*wb_x + v[1]*wb_y + v[2]*wb_z);
-  cu[4] =  (${c['gamma'] - 1})*u[4]*(ub_x + vb_y + wb_z) + (${1 - c['gamma']})*(v[0]*pb_x + v[1]*pb_y + v[2]*pb_z);
-  cu[4] += (${c['gamma'] - 1}) * (t0xx * u_x + t0xy * (u_y + v_x) + t0yy * v_y + t0xz * (w_x + u_z) + t0yz * (w_y + v_z) + t0zz * w_z);
-  cu[4] += (${c['gamma'] - 1}) * (txx * ub_x + txy * (ub_y + vb_x) +  tyy * vb_y + txz * (wb_x + ub_z) + tyz * (wb_y + vb_z) + tzz * wb_z);
+  // cu[4] =  (${c['gamma'] - 1})*u[4]*(ub_x + vb_y + wb_z) + (${1 - c['gamma']})*(v[0]*pb_x + v[1]*pb_y + v[2]*pb_z);
+  // cu[4] += (${c['gamma'] - 1}) * (t0xx * u_x + t0xy * (u_y + v_x) + t0yy * v_y + t0xz * (w_x + u_z) + t0yz * (w_y + v_z) + t0zz * w_z);
+  // cu[4] += (${c['gamma'] - 1}) * (txx * ub_x + txy * (ub_y + vb_x) +  tyy * vb_y + txz * (wb_x + ub_z) + tyz * (wb_y + vb_z) + tzz * wb_z);
+  cu[4] =  (v[0]*pb_x + v[1]*pb_y + v[2]*pb_z) - u[4]*(ub_x + vb_y + wb_z);
+  cu[4] += (t0xx * u_x + t0xy * (u_y + v_x) + t0yy * v_y + t0xz * (w_x + u_z) + t0yz * (w_y + v_z) + t0zz * w_z);
+  cu[4] += (txx * ub_x + txy * (ub_y + vb_x) +  tyy * vb_y + txz * (wb_x + ub_z) + tyz * (wb_y + vb_z) + tzz * wb_z);
+  cu[4] *= (1 - ${c['gamma']});
 % endif
 </%pyfr:kernel>

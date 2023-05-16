@@ -15,16 +15,16 @@
     fpdtype_t rhob_x = grad_uin[0][4];
     fpdtype_t rhob_y = grad_uin[1][4];
 
-    fpdtype_t ub_x = grad_uin[0][5];
-    fpdtype_t ub_y = grad_uin[1][5];
+    // fpdtype_t ub_x = grad_uin[0][5];
+    // fpdtype_t ub_y = grad_uin[1][5];
 
-    fpdtype_t vb_x = grad_uin[0][6];
-    fpdtype_t vb_y = grad_uin[1][6];
+    // fpdtype_t vb_x = grad_uin[0][6];
+    // fpdtype_t vb_y = grad_uin[1][6];
 
     fpdtype_t pb_x = grad_uin[0][7];
     fpdtype_t pb_y = grad_uin[1][7];
 
-    // perturbation derivatives
+    // perturbation derivatives (rhob*grad[u,v])
     fpdtype_t rho_x = grad_uin[0][0];
     fpdtype_t rho_y = grad_uin[1][0];
 
@@ -77,28 +77,28 @@
     fpdtype_t rhob = u_in[5];
     fpdtype_t pb = u_in[9];
 
-   // baseflow derivatives (grad[u,v,w])
+   // baseflow derivatives (grad[rho,u,v,w,p])
       fpdtype_t rhob_x = grad_uin[0][5];
       fpdtype_t rhob_y = grad_uin[1][5];
       fpdtype_t rhob_z = grad_uin[2][5];
 
-      fpdtype_t ub_x = grad_uin[0][6];
-      fpdtype_t ub_y = grad_uin[1][6];
-      fpdtype_t ub_z = grad_uin[2][6];
+      //fpdtype_t ub_x = grad_uin[0][6];
+      //fpdtype_t ub_y = grad_uin[1][6];
+      //fpdtype_t ub_z = grad_uin[2][6];
 
-      fpdtype_t vb_x = grad_uin[0][7];
-      fpdtype_t vb_y = grad_uin[1][7];
-      fpdtype_t vb_z = grad_uin[2][7];
+      //fpdtype_t vb_x = grad_uin[0][7];
+      //fpdtype_t vb_y = grad_uin[1][7];
+      //fpdtype_t vb_z = grad_uin[2][7];
 
-      fpdtype_t wb_x = grad_uin[0][8];
-      fpdtype_t wb_y = grad_uin[1][8];
-      fpdtype_t wb_z = grad_uin[2][8];
+      //fpdtype_t wb_x = grad_uin[0][8];
+      //fpdtype_t wb_y = grad_uin[1][8];
+      //fpdtype_t wb_z = grad_uin[2][8];
 
       fpdtype_t pb_x = grad_uin[0][9];
       fpdtype_t pb_y = grad_uin[1][9];
       fpdtype_t pb_z = grad_uin[2][9];
 
-      // perturbation derivatives (rho*grad[u,v,w])
+      // perturbation derivatives (rhob*grad[u,v,w])
       fpdtype_t u_x = grad_uin[0][1] - u*rhob_x;
       fpdtype_t u_y = grad_uin[1][1] - u*rhob_y;
       fpdtype_t u_z = grad_uin[2][1] - u*rhob_z;

@@ -109,3 +109,7 @@ class LinearNavierStokesDirichletBCInters(LinearNavierStokesBaseBCInters):
         self.c |= self._exp_opts(
             ['rho', 'p', 'u', 'v', 'w'][:self.ndims + 2], lhs
         )
+
+class LinearNavierStokesSupOutflowBCInters(LinearNavierStokesBaseBCInters):
+    type = 'sup-out-fn'
+    cflux_state = 'ghost'

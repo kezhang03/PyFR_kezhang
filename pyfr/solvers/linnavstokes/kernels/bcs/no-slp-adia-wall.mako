@@ -12,12 +12,12 @@
     // fpdtype_t T = (p/pb-rho/rhob)*Tb;
 
     // ur[0] = ul[0]+rhob*T/Tb;
-    ur[0] = 0;
+    ur[0] = -ul[0];
 % for i in range(ndims):
     ur[${i + 1}] = -ul[${i + 1}];
 % endfor
     // ur[${bnvars - 1}] = ul[${bnvars - 1}]-pb*T/Tb;
-    ur[${bnvars - 1}] = 0;
+    ur[${bnvars - 1}] = -ul[${bnvars - 1}];
     ${pyfr.expand('bc_common_base_var_copy', 'ul', 'ur')};
 </%pyfr:macro>
 

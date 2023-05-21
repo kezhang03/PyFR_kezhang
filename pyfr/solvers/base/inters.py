@@ -32,6 +32,11 @@ class BaseInters:
             self.q_dim = (self.ndims + 2) * 2
         else:
             self.q_dim = (self.ndims + 2)
+        self.UDI_datatype2 = cfg.get('soln-UDI', 'UDI-datatype2', 'None')
+        if self.UDI_datatype2 == 'complex':
+            self.q_dim2 = (self.ndims + 2) * 2
+        else:
+            self.q_dim2 = (self.ndims + 2)
         """
         MODIFICATION FOR LINEAR SOLVER
         """
@@ -79,18 +84,32 @@ class BaseInters:
     """
     MODIFICATION FOR LINEAR SOLVER
     """
-    def _const_mat_inlet(self, inter, meth):
+    def _const_mat_inlet(self, inter, meth, idx):
         coords = _get_inter_objs(inter, meth, self.elemap)
         coords = np.concatenate(coords)
         coords = np.atleast_2d(coords.T)
         coords = coords[:, self._perm]
 
         # read disturbance data
-        dirname = self.cfg.get('soln-UDI', 'UDI-dirname', 'None')
-        filenames = self.cfg.get('soln-UDI', 'UDI-filenames', 'None')
+        if idx == 1:
+            dirname = self.cfg.get('soln-UDI', f'UDI-dirname', 'None')
+            filenames = self.cfg.get('soln-UDI', f'UDI-filenames', 'None')
+            fmt = self.cfg.get('soln-UDI', f'UDI-format', 'None')
+            coord_filename = self.cfg.get('soln-UDI', f'UDI-coords-filename', 'None')
+            datatype = self.UDI_datatype
+            dim = self.q_dim
+        elif idx == 2:
+            dirname = self.cfg.get('soln-UDI', f'UDI-dirname{idx}', 'None')
+            filenames = self.cfg.get('soln-UDI', f'UDI-filenames{idx}', 'None')
+            fmt = self.cfg.get('soln-UDI', f'UDI-format{idx}', 'None')
+            coord_filename = self.cfg.get('soln-UDI', f'UDI-coords-filename{idx}', 'None')
+            datatype = self.UDI_datatype2
+            dim = self.q_dim2
+
+        else:
+            raise ValueError('Only support 2 inputs')
         filenames_list = filenames.split(',')
         filenames_list = [filename.strip() for filename in filenames_list]
-        fmt = self.cfg.get('soln-UDI', 'UDI-format', 'None')
         # load perturbation
         # !! note that our data is from large to small, so we flipped the data !!
         qs = [(scipy.io.loadmat(os.path.join(dirname, filename + fmt))[filename]) for filename in
@@ -98,7 +117,6 @@ class BaseInters:
         # qs = [np.flip(scipy.io.loadmat(os.path.join(dirname, filename + fmt))[filename]) for filename in
         #       filenames_list]
         # load coordinates of perturbation
-        coord_filename = self.cfg.get('soln-UDI', 'UDI-coords-filename', 'None')
         y = scipy.io.loadmat(os.path.join(dirname, coord_filename+fmt))[coord_filename]
         # y = np.flip(np.squeeze(y))
         y = np.squeeze(y)
@@ -108,12 +126,12 @@ class BaseInters:
         # we need to separate the real and imagine part
         q_intp = []
         for q in q_tmp:
-            if self.UDI_datatype == 'complex':
+            if datatype == 'complex':
                 q_intp = np.concatenate((q_intp, np.real(q)))
                 q_intp = np.concatenate((q_intp, np.imag(q)))
             else:
                 q_intp = np.concatenate((q_intp,q))
-        q_intp = np.reshape(q_intp, (self.q_dim, self.ninterfpts))
+        q_intp = np.reshape(q_intp, (dim, self.ninterfpts))
         # plot all interpolated perturbation
         # for i in range(0, (self.ndims+2)):
         #     plt.scatter(coords[1,:], q_intp[2 * i, :], label='interpolation')

@@ -110,14 +110,21 @@ class BaseAdvectionBCInters(BaseInters):
         MODIFICATION FOR LINEAR SOLVER
         """
         if self.UDI_datatype == 'complex':
-            subs |= dict(q_rho_r='q[0]', q_rho_i='q[1]', q_u_r='q[2]', q_u_i='q[3]', q_v_r='q[4]', q_v_i='q[5]',
-                         q_p_r='q[6]', q_p_i='q[7]')
+            subs |= dict(q_rho_r='q1[0]', q_rho_i='q1[1]', q_u_r='q1[2]', q_u_i='q1[3]', q_v_r='q1[4]', q_v_i='q1[5]',
+                         q_p_r='q1[6]', q_p_i='q1[7]')
             # leave the w velocity in the end
-            subs |= dict(q_w_r='q[8]', q_w_i='q[9]')
+            subs |= dict(q_w_r='q1[8]', q_w_i='q1[9]')
         if self.UDI_datatype == 'real':
-            subs |= dict(q_rho='q[0]', q_u='q[1]', q_v='q[2]', q_p='q[3]')
+            subs |= dict(q_rho='q1[0]', q_u='q1[1]', q_v='q1[2]', q_p='q1[3]')
             # leave the w velocity in the end
-            subs |= dict(q_w='q[4]')
+            subs |= dict(q_w='q1[4]')
+        if self.UDI_datatype2 == 'complex':
+            subs |= dict(q2_rho_r='q2[0]', q2_rho_i='q2[1]', q2_u_r='q2[2]', q2_u_i='q2[3]', q2_v_r='q2[4]', q2_v_i='q2[5]',
+                         q2_p_r='q2[6]', q2_p_i='q2[7]')
+            subs |= dict(q2_w_r='q2[8]', q2_w_i='q2[9]')
+        if self.UDI_datatype2 == 'real':
+            subs |= dict(q2_rho='q2[0]', q2_u='q2[1]', q2_v='q2[2]', q2_p='q2[3]')
+            subs |= dict(q2_w='q2[4]')
         """
         MODIFICATION FOR LINEAR SOLVER
         """
@@ -139,12 +146,18 @@ class BaseAdvectionBCInters(BaseInters):
         """
         MODIFICATION FOR LINEAR SOLVER
         """
-        if (any('q[' in ex for ex in exprs.values()) and
-                'q[' not in self._external_args):
+        if (any('q1[' in ex for ex in exprs.values()) and
+                'q1[' not in self._external_args):
                 spec_q = f'in fpdtype_t[{self.q_dim}]'
                 # on-grid interpolated data
-                q_intp_mesh = self._const_mat_inlet(lhs, 'get_ploc_for_inter')
-                self._set_external('q', spec_q, value=q_intp_mesh)
+                q_intp_mesh = self._const_mat_inlet(lhs, 'get_ploc_for_inter',1)
+                self._set_external('q1', spec_q, value=q_intp_mesh)
+        if (any('q2[' in ex for ex in exprs.values()) and
+                'q2[' not in self._external_args):
+                spec_q = f'in fpdtype_t[{self.q_dim2}]'
+                # on-grid interpolated data
+                q_intp_mesh2 = self._const_mat_inlet(lhs, 'get_ploc_for_inter',2)
+                self._set_external('q2', spec_q, value=q_intp_mesh2)
         """
         MODIFICATION FOR LINEAR SOLVER
         """

@@ -2,7 +2,7 @@
 <%namespace module='pyfr.backends.base.makoutil' name='pyfr'/>
 <%include file='pyfr.solvers.linnavstokes.kernels.bcs.common'/>
 
-<%pyfr:macro name='bc_rsolve_state' params='ul, nl, ur' externs='ploc, t, q'>
+<%pyfr:macro name='bc_rsolve_state' params='ul, nl, ur' externs='ploc, t, q1, q2'>
     ur[0] = ${c['rho']};
 % for i, v in enumerate('uvw'[:ndims]):
     ur[${i+1}] = ul[${bnvars}]*(${c[v]});

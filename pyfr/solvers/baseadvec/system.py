@@ -34,9 +34,21 @@ class BaseAdvectionSystem(BaseSystem):
         # Interpolate the solution to the quadrature points
         g1.add_all(k['eles/qptsu'])
 
-        # Compute the transformed flux
-        for l in k['eles/tdisf_curved'] + k['eles/tdisf_linear']:
-            g1.add(l, deps=deps(l, 'eles/qptsu'))
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
+        if self.linsolver == 'linear':
+            g1.add_all(k['eles/cu'], deps = deps('eles/qptsu'))
+            # Compute the transformed flux
+            for l in k['eles/tdisf_curved'] + k['eles/tdisf_linear']:
+                g1.add(l, deps=deps(l, 'eles/cu'))
+            """
+            MODIFICATION FOR LINEAR SOLVER
+            """
+        else:
+            # Compute the transformed flux
+            for l in k['eles/tdisf_curved'] + k['eles/tdisf_linear']:
+                g1.add(l, deps=deps(l, 'eles/qptsu'))
 
         # Compute the transformed divergence of the partially corrected flux
         for l in k['eles/tdivtpcorf']:
@@ -55,19 +67,9 @@ class BaseAdvectionSystem(BaseSystem):
         # Compute the transformed divergence of the corrected flux
         g2.add_all(k['eles/tdivtconf'], deps=k['mpiint/comm_flux'])
 
-        """
-        MODIFICATION FOR LINEAR SOLVER
-        """
-        if self.linsolver == 'linear':
-            for l in k['eles/cu']:
-                g2.add(l, deps=deps(l,'eles/tdivtconf'))
-            # Obtain the physical divergence of the corrected flux
-            for l in k['eles/negdivconf']:
-                g2.add(l, deps=deps(l, 'eles/cu'))
-        #     g2.add_all(k['eles/cu'], deps=k['eles/tdivtconf'])
-        else:
-            for l in k['eles/negdivconf']:
-                g2.add(l, deps=deps(l, 'eles/tdivtconf'))
+        # Obtain the physical divergence of the corrected flux
+        for l in k['eles/negdivconf']:
+            g2.add(l, deps=deps(l, 'eles/tdivtconf'))
 
 
         g2.commit()

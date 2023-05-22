@@ -66,8 +66,8 @@
     fout[0][2] += txy;
     fout[1][2] += tyy;
 
-    // fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x;
-    // fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
+    fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x;
+    fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
 
 </%pyfr:macro>
 % elif ndims == 3:

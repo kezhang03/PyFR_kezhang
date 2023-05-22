@@ -12,8 +12,7 @@
 
 // Compute the C@U term in the formula and combine it as a forcing term
 % for i, ex in enumerate(srcex):
-    tdivtconf[${i}] = -rcpdjac*tdivtconf[${i}] + ${ex};
-     //- cu[${i}];
+    tdivtconf[${i}] = -rcpdjac*tdivtconf[${i}] + ${ex} - cu[${i}];
 % endfor
 % for j in range(bnvars):
     // set baseflow flux to 0

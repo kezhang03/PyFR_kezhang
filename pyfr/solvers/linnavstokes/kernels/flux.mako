@@ -61,11 +61,13 @@
     fpdtype_t tyy = -2*mu_c*invrhob*(v_y - ${1.0/3.0}*(u_x + v_y));
     fpdtype_t txy = -mu_c*invrhob*(v_x + u_y);
 
-    fout[0][1] += txx;     fout[1][1] += txy;
-    fout[0][2] += txy;     fout[1][2] += tyy;
+    //fout[0][1] += txx;
+    //fout[1][1] += txy;
+    //fout[0][2] += txy;
+    //fout[1][2] += tyy;
 
-    fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x;
-    fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
+    //fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x;
+    //fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
 
 </%pyfr:macro>
 % elif ndims == 3:

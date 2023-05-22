@@ -42,14 +42,14 @@ class BaseAdvectionSystem(BaseSystem):
             # Compute the transformed flux
             for l in k['eles/tdisf_curved'] + k['eles/tdisf_linear']:
                 g1.add(l, deps=deps(l, 'eles/cu'))
-            """
-            MODIFICATION FOR LINEAR SOLVER
-            """
+
         else:
             # Compute the transformed flux
             for l in k['eles/tdisf_curved'] + k['eles/tdisf_linear']:
                 g1.add(l, deps=deps(l, 'eles/qptsu'))
-
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
         # Compute the transformed divergence of the partially corrected flux
         for l in k['eles/tdivtpcorf']:
             ldeps = deps(l, 'eles/tdisf_curved', 'eles/tdisf_linear',

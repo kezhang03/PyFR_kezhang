@@ -83,14 +83,30 @@ class BaseAdvectionDiffusionSystem(BaseAdvectionSystem):
         # Interpolate the solution to the quadrature points
         g2.add_all(k['eles/qptsu'])
 
-        # Compute the transformed flux
-        for l in k['eles/tdisf_curved'] + k['eles/tdisf_linear']:
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
+        if self.linsolver == 'linear':
             if k['eles/qptsu']:
                 ldeps = deps(l, 'eles/gradcoru_qpts', 'eles/qptsu')
             else:
                 ldeps = deps(l, 'eles/gradcoru_fpts')
-            g2.add(l, deps=ldeps)
+            g2.add_all(k['eles/cu'], deps=ldeps)
 
+            # Compute the transformed flux
+            for l in k['eles/tdisf_curved'] + k['eles/tdisf_linear']:
+                g2.add(l, deps=deps(l, 'eles/cu'))
+        else:
+        # Compute the transformed flux
+            for l in k['eles/tdisf_curved'] + k['eles/tdisf_linear']:
+                if k['eles/qptsu']:
+                    ldeps = deps(l, 'eles/gradcoru_qpts', 'eles/qptsu')
+                else:
+                    ldeps = deps(l, 'eles/gradcoru_fpts')
+                g2.add(l, deps=ldeps)
+        """
+        MODIFICATION FOR LINEAR SOLVER
+        """
         # Compute the transformed divergence of the partially corrected flux
         for l in k['eles/tdivtpcorf']:
             g2.add(l, deps=deps(l, 'eles/tdisf_curved', 'eles/tdisf_linear'))
@@ -109,24 +125,10 @@ class BaseAdvectionDiffusionSystem(BaseAdvectionSystem):
         # Compute the transformed divergence of the corrected flux
         g3.add_all(k['eles/tdivtconf'], deps=k['mpiint/comm_flux'])
 
-        """
-        MODIFICATION FOR LINEAR SOLVER
-        """
-        if self.linsolver == 'linear':
-            for l in k['eles/cu']:
-                g3.add(l, deps=deps(l,'eles/tdivtconf'))
-                # g2.add_all(k['eles/cu'], deps=k['eles/tdivtconf'])
-            for l in k['eles/negdivconf']:
-                g3.add(l, deps=deps(l, 'eles/cu'))
-
         # Obtain the physical divergence of the corrected flux
-        else:
-            for l in k['eles/negdivconf']:
-                g3.add(l, deps=deps(l, 'eles/tdivtconf'))
+        for l in k['eles/negdivconf']:
+            g3.add(l, deps=deps(l, 'eles/tdivtconf'))
         g3.commit()
-        """
-        MODIFICATION FOR LINEAR SOLVER
-        """
         return g1, g2, g3
 
     @memoize

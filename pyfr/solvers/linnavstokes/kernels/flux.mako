@@ -15,11 +15,11 @@
     fpdtype_t rhob_x = grad_uin[0][4];
     fpdtype_t rhob_y = grad_uin[1][4];
 
-    // fpdtype_t ub_x = grad_uin[0][5];
-    // fpdtype_t ub_y = grad_uin[1][5];
+    fpdtype_t ub_x = grad_uin[0][5];
+    fpdtype_t ub_y = grad_uin[1][5];
 
-    // fpdtype_t vb_x = grad_uin[0][6];
-    // fpdtype_t vb_y = grad_uin[1][6];
+    fpdtype_t vb_x = grad_uin[0][6];
+    fpdtype_t vb_y = grad_uin[1][6];
 
     fpdtype_t pb_x = grad_uin[0][7];
     fpdtype_t pb_y = grad_uin[1][7];
@@ -66,8 +66,16 @@
     fout[0][2] += txy;
     fout[1][2] += tyy;
 
-    fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x;
-    fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
+    // new equation test
+    fpdtype_t t0xx = -2*mu_c*(ub_x - ${1.0/3.0}*(ub_x + vb_y));
+    fpdtype_t t0yy = -2*mu_c*(vb_y - ${1.0/3.0}*(ub_x + vb_y));
+    fpdtype_t t0xy = -mu_c*(vb_x + ub_y);
+    // tau has negative sign
+    fout[0][3] += ${c['gamma']-1}*(u*t0xx+u*t0xy) - mu_c*${c['gamma']/c['Pr']}*T_x;
+    fout[1][3] += ${c['gamma']-1}*(v*t0xy+v*t0yy) - mu_c*${c['gamma']/c['Pr']}*T_y;
+    // old one
+    // fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x;
+    // fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
 
 </%pyfr:macro>
 % elif ndims == 3:

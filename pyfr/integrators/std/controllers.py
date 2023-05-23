@@ -89,8 +89,8 @@ class StdNoneController(BaseStdController):
         """
         # Calculate baseflow gradients
         # zk: use self.nacptsteps instead of t, which is better for restart
-        if self.linsolver == 'linear' and self.nacptsteps == 0 and self.linear_type == 'linear-euler':
-            self.system.compute_baseflow_grads(self.tcurr, self._idxcurr)
+        # if self.linsolver == 'linear' and self.nacptsteps == 0 and self.linear_type == 'linear-euler':
+        #     self.system.compute_baseflow_grads(self.tcurr, self._idxcurr)
 
         """
         MODIFICATION FOR LINEAR SOLVER

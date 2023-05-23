@@ -61,9 +61,9 @@
   // momentum equation (x)
   // grad: 1st index is the dimension
   // grad: 2nd index is the variable
-  cu[1] =  u[0]*(u[5]*ub_x + u[6]*ub_y) + u[4]*(v[1]*ub_x + v[2]*ub_y);
+  cu[1] =  u[0]*(u[5]*ub_x + u[6]*ub_y) + u[4]*(v[0]*ub_x + v[1]*ub_y);
   // momentum equation (y)
-  cu[2] =  u[0]*(u[5]*vb_x + u[6]*vb_y) + u[4]*(v[1]*vb_x + v[2]*vb_y);
+  cu[2] =  u[0]*(u[5]*vb_x + u[6]*vb_y) + u[4]*(v[0]*vb_x + v[1]*vb_y);
   // energy equation
   // cu[3] =  (${c['gamma'] - 1})*u[3]*(ub_x + vb_y) + (${1 - c['gamma']})*(v[0]*pb_x + v[1]*pb_y);
   // cu[3] += (${c['gamma'] - 1}) * (t0xx * u_x + t0xy * (u_y + v_x) + t0yy * v_y) * invrhob;

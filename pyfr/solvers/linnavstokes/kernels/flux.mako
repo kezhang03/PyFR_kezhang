@@ -28,11 +28,11 @@
     fpdtype_t rho_x = grad_uin[0][0];
     fpdtype_t rho_y = grad_uin[1][0];
 
-    fpdtype_t u_x = grad_uin[0][1]; // - u*rhob_x;
-    fpdtype_t u_y = grad_uin[1][1]; // - u*rhob_y;
+    fpdtype_t u_x = grad_uin[0][1] - u*rhob_x;
+    fpdtype_t u_y = grad_uin[1][1] - u*rhob_y;
 
-    fpdtype_t v_x = grad_uin[0][2]; // - v*rhob_x;
-    fpdtype_t v_y = grad_uin[1][2]; // - v*rhob_y;
+    fpdtype_t v_x = grad_uin[0][2] - v*rhob_x;
+    fpdtype_t v_y = grad_uin[1][2] - v*rhob_y;
 
     fpdtype_t p_x = grad_uin[0][3];
     fpdtype_t p_y = grad_uin[1][3];
@@ -66,8 +66,8 @@
     fout[0][2] += txy;
     fout[1][2] += tyy;
 
-    //fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x;
-    //fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
+    fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x;
+    fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
 
 </%pyfr:macro>
 % elif ndims == 3:

@@ -46,7 +46,7 @@
                    / (cpT + ${c['cpTs']});
     // Compute viscosity perturbation
     fpdtype_t dmudcpT = mu_c*sqrt(Trat)/${c['cpTref']*(c['cpTref'] + c['cpTs'])}/(cpT + ${c['cpTs']})*(1.5-cpT/(cpT + ${c['cpTs']}));
-    fpdtype_t mu_p = cpT*(p/pb-rho/rhob);
+    fpdtype_t mu_p = dmudcpT*cpT*(p/pb-rho/rhob);
 % else:
     fpdtype_t mu_c = ${c['mu']};
     fpdtype_t mu_p = 0.0;
@@ -131,7 +131,7 @@
                    / (cpT + ${c['cpTs']});
     // Compute viscosity perturbation
     fpdtype_t dmudcpT = mu_c*sqrt(Trat)/c['cpTref']*(c['cpTref'] + c['cpTs'])/(cpT + ${c['cpTs']})*(1.5-cpT/(cpT + ${c['cpTs']}));
-    fpdtype_t mu_p = cpT*(p/pb-rho/rhob);
+    fpdtype_t mu_p = dmudcpT*cpT*(p/pb-rho/rhob);
 % else:
     fpdtype_t mu_c = ${c['mu']};
     fpdtype_t mu_p = 0.0;

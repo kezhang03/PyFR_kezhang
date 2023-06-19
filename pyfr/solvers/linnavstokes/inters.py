@@ -87,6 +87,9 @@ class LinearNavierStokesNoSlpAdiaWallBCInters(LinearNavierStokesBaseBCInters):
     type = 'no-slp-adia-wall'
     cflux_state = 'ghost'
 
+class LinearNavierStokesNoSlpIsotWallBCInters(LinearNavierStokesBaseBCInters):
+    type = 'no-slp-isot-wall'
+    cflux_state = 'ghost'
 
 class LinearNavierStokesCharRiemInvBCInters(LinearNavierStokesBaseBCInters):
     type = 'char-riem-inv'

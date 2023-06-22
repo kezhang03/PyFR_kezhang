@@ -75,8 +75,12 @@
     fout[0][2] += txy;
     fout[1][2] += tyy;
 
-    fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x;
-    fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
+    // fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x;
+    // fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
+
+    // add viscosity perturbation to temperature derivatives
+    fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x - mu_p*${c['gamma']/c['Pr']}*Tb_x;
+    fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y - mu_p*${c['gamma']/c['Pr']}*Tb_y;
 
 </%pyfr:macro>
 % elif ndims == 3:
@@ -167,8 +171,13 @@
     fout[0][2] += txy;     fout[1][2] += tyy;     fout[2][2] += tyz;
     fout[0][3] += txz;     fout[1][3] += tyz;     fout[2][3] += tzz;
 
-    fout[0][4] += -mu_c*${c['gamma']/c['Pr']}*T_x;
-    fout[1][4] += -mu_c*${c['gamma']/c['Pr']}*T_y;
-    fout[2][4] += -mu_c*${c['gamma']/c['Pr']}*T_z;
+    // fout[0][4] += -mu_c*${c['gamma']/c['Pr']}*T_x;
+    // fout[1][4] += -mu_c*${c['gamma']/c['Pr']}*T_y;
+    // fout[2][4] += -mu_c*${c['gamma']/c['Pr']}*T_z;
+
+    // add viscosity perturbation to temperature derivatives
+    fout[0][4] += -mu_c*${c['gamma']/c['Pr']}*T_x - mu_p*${c['gamma']/c['Pr']}*Tb_x;
+    fout[1][4] += -mu_c*${c['gamma']/c['Pr']}*T_y - mu_p*${c['gamma']/c['Pr']}*Tb_y;
+    fout[2][4] += -mu_c*${c['gamma']/c['Pr']}*T_z - mu_p*${c['gamma']/c['Pr']}*Tb_z;
 </%pyfr:macro>
 % endif

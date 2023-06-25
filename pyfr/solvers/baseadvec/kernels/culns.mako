@@ -55,16 +55,16 @@
   fpdtype_t v_x = grad_uin[0][2] - v[1]*rhob_x;
   fpdtype_t v_y = grad_uin[1][2] - v[1]*rhob_y;
 
-  // negated stress tensors
-  fpdtype_t txx = -2*mu_c*invrhob*(u_x - ${1.0/3.0}*(u_x + v_y));
-  fpdtype_t tyy = -2*mu_c*invrhob*(v_y - ${1.0/3.0}*(u_x + v_y));
-  fpdtype_t txy = -mu_c*invrhob*(v_x + u_y);
+  // stress tensors
+  fpdtype_t txx = 2*mu_c*invrhob*(u_x - ${1.0/3.0}*(u_x + v_y));
+  fpdtype_t tyy = 2*mu_c*invrhob*(v_y - ${1.0/3.0}*(u_x + v_y));
+  fpdtype_t txy = mu_c*invrhob*(v_x + u_y);
 
-  fpdtype_t t0xx = -2*mu_c*(ub_x - ${1.0/3.0}*(ub_x + vb_y));
-  fpdtype_t t0yy = -2*mu_c*(vb_y - ${1.0/3.0}*(ub_x + vb_y));
-  fpdtype_t t0xy = -mu_c*(vb_x + ub_y);
+  fpdtype_t t0xx = 2*mu_c*(ub_x - ${1.0/3.0}*(ub_x + vb_y));
+  fpdtype_t t0yy = 2*mu_c*(vb_y - ${1.0/3.0}*(ub_x + vb_y));
+  fpdtype_t t0xy = mu_c*(vb_x + ub_y);
 
-  // stress tensor due to viscosity perturbation (use baseflow stress to save time)
+  // stress tensors due to viscosity perturbation (use baseflow stress to save time)
   txx += t0xx / mu_c * mu_p;
   tyy += t0yy / mu_c * mu_p;
   txy += t0xy / mu_c * mu_p;
@@ -119,22 +119,22 @@
   fpdtype_t w_y = grad_uin[1][3] - v[2]*rhob_y;
   fpdtype_t w_z = grad_uin[2][3] - v[2]*rhob_z;
 
-  // negated stress tensors
-  fpdtype_t txx = -2*mu_c*invrhob*(u_x - ${1.0/3.0}*(u_x + v_y + w_z));
-  fpdtype_t tyy = -2*mu_c*invrhob*(v_y - ${1.0/3.0}*(u_x + v_y + w_z));
-  fpdtype_t tzz = -2*mu_c*invrhob*(w_z - ${1.0/3.0}*(u_x + v_y + w_z));
-  fpdtype_t txy = -mu_c*invrhob*(v_x + u_y);
-  fpdtype_t txz = -mu_c*invrhob*(u_z + w_x);
-  fpdtype_t tyz = -mu_c*invrhob*(w_y + v_z);
+  // stress tensors
+  fpdtype_t txx = 2*mu_c*invrhob*(u_x - ${1.0/3.0}*(u_x + v_y + w_z));
+  fpdtype_t tyy = 2*mu_c*invrhob*(v_y - ${1.0/3.0}*(u_x + v_y + w_z));
+  fpdtype_t tzz = 2*mu_c*invrhob*(w_z - ${1.0/3.0}*(u_x + v_y + w_z));
+  fpdtype_t txy = mu_c*invrhob*(v_x + u_y);
+  fpdtype_t txz = mu_c*invrhob*(u_z + w_x);
+  fpdtype_t tyz = mu_c*invrhob*(w_y + v_z);
 
-  fpdtype_t t0xx = -2*mu_c*(ub_x - ${1.0/3.0}*(ub_x + vb_y + wb_z));
-  fpdtype_t t0yy = -2*mu_c*(vb_y - ${1.0/3.0}*(ub_x + vb_y + wb_z));
-  fpdtype_t t0zz = -2*mu_c*(wb_z - ${1.0/3.0}*(ub_x + vb_y + wb_z));
-  fpdtype_t t0xy = -mu_c*(vb_x + ub_y);
-  fpdtype_t t0xz = -mu_c*(ub_z + wb_x);
-  fpdtype_t t0yz = -mu_c*(wb_y + vb_z);
+  fpdtype_t t0xx = 2*mu_c*(ub_x - ${1.0/3.0}*(ub_x + vb_y + wb_z));
+  fpdtype_t t0yy = 2*mu_c*(vb_y - ${1.0/3.0}*(ub_x + vb_y + wb_z));
+  fpdtype_t t0zz = 2*mu_c*(wb_z - ${1.0/3.0}*(ub_x + vb_y + wb_z));
+  fpdtype_t t0xy = mu_c*(vb_x + ub_y);
+  fpdtype_t t0xz = mu_c*(ub_z + wb_x);
+  fpdtype_t t0yz = mu_c*(wb_y + vb_z);
 
-  // stress tensor due to viscosity perturbation (use baseflow stress to save time)
+  // stress tensors due to viscosity perturbation (use baseflow stress to save time)
   txx += txx / mu_c * mu_p;
   tyy += tyy / mu_c * mu_p;
   tzz += tzz / mu_c * mu_p;

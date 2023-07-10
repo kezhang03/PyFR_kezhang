@@ -186,3 +186,12 @@ class NavierStokesSubOutflowBCInters(NavierStokesBaseBCInters):
         super().__init__(be, lhs, elemap, cfgsect, cfg)
 
         self.c |= self._exp_opts(['p'], lhs)
+
+class NavierStokesSubPNROutflowBCInters(NavierStokesBaseBCInters):
+    type = 'sub-out-pnr'
+    cflux_state = 'ghost'
+
+    def __init__(self, be, lhs, elemap, cfgsect, cfg):
+        super().__init__(be, lhs, elemap, cfgsect, cfg)
+
+        self.c |= self._exp_opts(['p'], lhs)

@@ -12,14 +12,24 @@
 
     fpdtype_t c0l = sqrt(${c['gamma']}*pbl/ul[${bnvars}]);
     fpdtype_t c0r = sqrt(${c['gamma']}*pbr/ur[${bnvars}]);
-    fpdtype_t invrhobl = ul[${bnvars}];
-    fpdtype_t invrhobr = ur[${bnvars}];
+    // fpdtype_t invrhobl = ul[${bnvars}];
+    // fpdtype_t invrhobr = ur[${bnvars}];
 
     // Estimate the maximum wave speed / 2
     // Use the Nektar++ way, explained in SPECFEM2D-DG-LNS paper.
-    fpdtype_t a = max(abs(ul[${bnvars+1}]+ul[1]*invrhobl-c0l),abs(ul[${bnvars+1}]+ul[1]*invrhobl+c0l));
-    a = max(abs(ur[${bnvars+1}]+ur[1]*invrhobr-c0r), a);
-    a = max(abs(ur[${bnvars+1}]+ur[1]*invrhobr+c0r), a);
+    // fpdtype_t a = max(abs(ul[${bnvars+1}]+ul[1]*invrhobl-c0l),abs(ul[${bnvars+1}]+ul[1]*invrhobl+c0l));
+    // a = max(abs(ur[${bnvars+1}]+ur[1]*invrhobr-c0r), a);
+    // a = max(abs(ur[${bnvars+1}]+ur[1]*invrhobr+c0r), a);
+
+%  for i in range(ndims):
+    vbl[${i}] = ul[${bnvars+1+i}];
+    vbr[${i}] = ur[${bnvars+1+i}];
+% endfor
+
+    fpdtype_t nbvl = ${pyfr.dot('n[{i}]', 'vbl[{i}]', i=ndims)};
+    fpdtype_t nbvr = ${pyfr.dot('n[{i}]', 'vbr[{i}]', i=ndims)};
+
+    fpdtype_t a = max(abs(nbvl)+c0l, abs(nbvr)+c0r);
 
     ${pyfr.expand('inviscid_flux', 'ul', 'fl', 'pl', 'vl')};
     ${pyfr.expand('inviscid_flux', 'ur', 'fr', 'pr', 'vr')};

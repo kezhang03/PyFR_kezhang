@@ -9,6 +9,7 @@
     fpdtype_t pl, pr;
     fpdtype_t pbl = ul[${nvars-1}];
     fpdtype_t pbr = ur[${nvars-1}];
+    fpdtype_t vbl[${ndims}], vbr[${ndims}];
 
     fpdtype_t c0l = sqrt(${c['gamma']}*pbl/ul[${bnvars}]);
     fpdtype_t c0r = sqrt(${c['gamma']}*pbr/ur[${bnvars}]);

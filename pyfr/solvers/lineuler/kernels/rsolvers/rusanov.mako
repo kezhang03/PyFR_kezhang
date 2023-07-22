@@ -26,11 +26,6 @@
     a = max(abs(ur[${bnvars+1}]-c0r), a);
     a = max(abs(ur[${bnvars+1}]+c0r), a);
 
-    // for i in range(ndims):
-    // vbl[${i}] = ul[${bnvars+1+i}];
-    // vbr[${i}] = ur[${bnvars+1+i}];
-    // endfor
-
     // fpdtype_t nbvl = ${pyfr.dot('n[{i}]', 'vbl[{i}]', i=ndims)};
     // fpdtype_t nbvr = ${pyfr.dot('n[{i}]', 'vbr[{i}]', i=ndims)};
 

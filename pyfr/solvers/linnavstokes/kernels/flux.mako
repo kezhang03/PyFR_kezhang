@@ -10,6 +10,8 @@
     fpdtype_t p = u_in[3];
     fpdtype_t rhob = u_in[4];
     fpdtype_t pb = u_in[7];
+    fpdtype_t invgmo = ${1/(c['gamma']-1)};
+    fpdtype_t gmo = ${c['gamma']-1};
 
     // baseflow derivatives
     fpdtype_t rhob_x = grad_uin[0][4];
@@ -53,9 +55,9 @@
 % endif
 
     // Compute temperature derivatives (Cv*dT/d[x,y])
-    fpdtype_t Tb = pb/rhob;
-    fpdtype_t Tb_x = (invrhob*pb_x-invrhob*invrhob*pb*rhob_x);
-    fpdtype_t Tb_y = (invrhob*pb_y-invrhob*invrhob*pb*rhob_y);
+    fpdtype_t Tb = invgmo*pb/rhob;
+    fpdtype_t Tb_x = invgmo*(invrhob*pb_x-invrhob*invrhob*pb*rhob_x);
+    fpdtype_t Tb_y = invgmo*(invrhob*pb_y-invrhob*invrhob*pb*rhob_y);
 
     fpdtype_t T_x = Tb_x * (p/pb-rho/rhob) + Tb * (p_x/pb - p/pb/pb*pb_x - rho_x*invrhob + rho*invrhob*invrhob*rhob_x);
     fpdtype_t T_y = Tb_y * (p/pb-rho/rhob) + Tb * (p_y/pb - p/pb/pb*pb_y - rho_y*invrhob + rho*invrhob*invrhob*rhob_y);
@@ -79,8 +81,8 @@
     // fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y;
 
     // add viscosity perturbation to temperature derivatives
-    fout[0][3] += -mu_c*${c['gamma']/c['Pr']}*T_x - mu_p*${c['gamma']/c['Pr']}*Tb_x;
-    fout[1][3] += -mu_c*${c['gamma']/c['Pr']}*T_y - mu_p*${c['gamma']/c['Pr']}*Tb_y;
+    fout[0][3] += gmo*(-mu_c*${c['gamma']/c['Pr']}*T_x - mu_p*${c['gamma']/c['Pr']}*Tb_x);
+    fout[1][3] += gmo*(-mu_c*${c['gamma']/c['Pr']}*T_y - mu_p*${c['gamma']/c['Pr']}*Tb_y);
 
 </%pyfr:macro>
 % elif ndims == 3:

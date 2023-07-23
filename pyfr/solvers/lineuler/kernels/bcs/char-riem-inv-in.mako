@@ -35,7 +35,7 @@
 
     ur[${bnvars-1}] = c * (h5 - h4);
 
-    ur[1] = (h4 + h5)*nl[0];
+    ur[1] = (h4 + h5)*nl[1];
 
 % for i in range(ndims - 1):
     ur[${i + 1 + 1}] = ul[${bnvars}]*${c['uvw'[i + 1]]}; // + (h4 + h5)*nl[${i + 1}];

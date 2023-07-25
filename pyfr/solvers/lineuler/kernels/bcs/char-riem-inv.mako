@@ -6,10 +6,11 @@
 
 <%pyfr:macro name='bc_rsolve_state' params='ul, nl, ur' externs='ploc, t'>
     fpdtype_t inv = 1.0 / ul[${bnvars}];
-    fpdtype_t V_n0 = inv*${' + '.join('ul[{1}]*nl[{0}]'.format(i + bnvars, i + 1)
+    // baseflow uses primitive variables
+    fpdtype_t V_n0 = ${' + '.join('ul[{0}]*nl[{1}]'.format(i + 1 + bnvars, i)
                                  for i in range(ndims))};
-
-    fpdtype_t V_n = inv*${' + '.join('ul[{1}]*nl[{0}]'.format(i, i + 1)
+    // perturbation uses conservative variables, Vn = rhob * u dot n
+    fpdtype_t V_n = ${' + '.join('ul[{0}]*nl[{1}]'.format(i + 1, i)
                                  for i in range(ndims))};
 
 
@@ -19,12 +20,13 @@
                  ? ul[0] - ul[${bnvars-1}] / (c * c)
                  : 0;
 
-
-    fpdtype_t h4 = (V_n0 > c)
+    // h4 = (rhob*u - p/cb)/2
+    fpdtype_t h4 = (V_n0 - c > 0)
                  ? V_n/2.0 - ul[${bnvars-1}]/(2.0*c)
                  : 0;
 
-    fpdtype_t h5 = (V_n0 + c >0)
+    // h5 = (rhob*u + p/cb)/2
+    fpdtype_t h5 = (V_n0 + c > 0)
                  ? V_n/2.0 + ul[${bnvars-1}]/(2.0*c)
                  : 0;
 
@@ -33,9 +35,11 @@
     ur[${bnvars-1}] = c * (h5 - h4);
 
 % for i in range(ndims):
+    // rhob * u
     ur[${i + 1}] = (h4 + h5)*nl[${i}];
 % endfor
 
+//copy baseflow (necessary for LEE because ghost.mako only works for LNS)
 % for i in range(bnvars):
     ur[${i + bnvars}] = ul[${i + bnvars}];
 % endfor

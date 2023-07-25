@@ -22,12 +22,12 @@
 % if visc_corr == 'sutherland':
     // Compute the temperature and viscosity
     // Use baseflow
-    fpdtype_t cpT = ${c['gamma']}/${c['gamma']-1}*(pb/rhob);
+    fpdtype_t cpT = ${c['gamma']}/({c['gamma']-1)}*(pb/rhob);
     fpdtype_t Trat = ${1/c['cpTref']}*cpT;
     fpdtype_t mu_c = ${c['mu']*(c['cpTref'] + c['cpTs'])}*Trat*sqrt(Trat)
                    / (cpT + ${c['cpTs']});
     // Compute viscosity perturbation
-    fpdtype_t dmudcpT = mu_c*sqrt(Trat)/${c['cpTref']*(c['cpTref'] + c['cpTs'])}/(cpT + ${c['cpTs']})*(1.5-cpT/(cpT + ${c['cpTs']}));
+    fpdtype_t dmudcpT = mu_c*sqrt(Trat)*${(c['cpTref'] + c['cpTs'])/c['cpTref']}/(cpT + ${c['cpTs']})*(1.5-cpT/(cpT + ${c['cpTs']}));
     fpdtype_t mu_p = dmudcpT*cpT*(p/pb-rho/rhob);
 % else:
     fpdtype_t mu_c = ${c['mu']};

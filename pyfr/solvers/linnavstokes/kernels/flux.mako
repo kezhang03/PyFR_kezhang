@@ -42,7 +42,7 @@
 % if visc_corr == 'sutherland':
     // Compute the temperature and viscosity
     // Use baseflow
-    fpdtype_t cpT = ${c['gamma']}/({c['gamma']-1)}*(pb/rhob);
+    fpdtype_t cpT = ${c['gamma']/(c['gamma']-1)}*(pb/rhob);
     fpdtype_t Trat = ${1/c['cpTref']}*cpT;
     fpdtype_t mu_c = ${c['mu']*(c['cpTref'] + c['cpTs'])}*Trat*sqrt(Trat)
                    / (cpT + ${c['cpTs']});
@@ -131,7 +131,7 @@
 % if visc_corr == 'sutherland':
     // Compute the temperature and viscosity
     // Use baseflow
-    fpdtype_t cpT = ${c['gamma']}/({c['gamma']-1)}*(pb/rhob);
+    fpdtype_t cpT = ${c['gamma']/(c['gamma']-1)}*(pb/rhob);
     fpdtype_t Trat = ${1/c['cpTref']}*cpT;
     fpdtype_t mu_c = ${c['mu']*(c['cpTref'] + c['cpTs'])}*Trat*sqrt(Trat)
                    / (cpT + ${c['cpTs']});

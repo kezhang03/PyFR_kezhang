@@ -7,7 +7,7 @@
 <%pyfr:macro name='bc_rsolve_state' params='ul, nl, ur' externs='ploc, t, q1, q2'>
     fpdtype_t inv = 1.0 / ul[${bnvars}];
     // baseflow uses primitive variables
-    fpdtype_t V_n0 = ${' + '.join('ul[{0}]*nl[{0}]'.format(i + 1 + bnvars, i)
+    fpdtype_t V_n0 = ${' + '.join('ul[{0}]*nl[{1}]'.format(i + 1 + bnvars, i)
                                  for i in range(ndims))};
     // perturbation uses conservative variables, Vn = rhob * u dot n
     fpdtype_t V_n = ${' + '.join('ul[{0}]*nl[{1}]'.format(i + 1, i)

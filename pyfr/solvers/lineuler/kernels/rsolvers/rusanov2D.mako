@@ -13,9 +13,10 @@
 
     fpdtype_t c0l = sqrt(${c['gamma']}*pbl/ul[${bnvars}]);
     fpdtype_t c0r = sqrt(${c['gamma']}*pbr/ur[${bnvars}]);
-    fpdtype_t invrhobl = ul[${bnvars}];
-    fpdtype_t invrhobr = ur[${bnvars}];
-
+% for i in range(ndims):
+    vbl[${i}] = ul[${bnvars}] * ul[${1 + i}];
+    vbr[${i}] = ur[${bnvars}] * ur[${1 + i}];
+% endfor
     // Estimate the maximum wave speed / 2
     fpdtype_t nbvl = ${pyfr.dot('n[{i}]', 'vbl[{i}]', i=ndims)};
     fpdtype_t nbvr = ${pyfr.dot('n[{i}]', 'vbr[{i}]', i=ndims)};

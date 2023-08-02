@@ -111,14 +111,11 @@ class BaseInters:
         filenames_list = filenames.split(',')
         filenames_list = [filename.strip() for filename in filenames_list]
         # load perturbation
-        # !! note that our data is from large to small, so we flipped the data !!
+        # !! note that our data is from small to large!!
         qs = [(scipy.io.loadmat(os.path.join(dirname, filename + fmt))[filename]) for filename in
               filenames_list]
-        # qs = [np.flip(scipy.io.loadmat(os.path.join(dirname, filename + fmt))[filename]) for filename in
-        #       filenames_list]
         # load coordinates of perturbation
         y = scipy.io.loadmat(os.path.join(dirname, coord_filename+fmt))[coord_filename]
-        # y = np.flip(np.squeeze(y))
         y = np.squeeze(y)
         cs = [scipy.interpolate.interp1d(y, q.flatten(), bounds_error=False, fill_value = q[-1]) for q in qs]
         # interpolate value at inlet boundary

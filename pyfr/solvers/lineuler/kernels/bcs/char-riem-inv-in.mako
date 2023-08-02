@@ -42,7 +42,8 @@
     ur[${bnvars-1}] = c * (h5 - h4);
 
 % for i in range(ndims):
-    ur[${i + 1}] = (h4 + h5) * nl[${i}];
+    // ur[${i + 1}] = (h4 + h5) * nl[${i}];
+    ur[${i + 1}] = ul[${bnvars}] * ${c['uvw'[i]]} + ((h4 + h5) - V_e) * nl[${i}];
 % endfor
 
 //copy baseflow (necessary for LEE because ghost.mako only works for LNS)

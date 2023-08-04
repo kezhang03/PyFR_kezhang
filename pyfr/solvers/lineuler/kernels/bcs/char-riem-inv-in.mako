@@ -24,19 +24,21 @@
                  : ${c['rho']} - ${c['p']} / (c * c) ;  //incoming characteristics
 
     // h4 = (rhob*u - p/cb)/2
-    fpdtype_t h4 = (V_n0 - c > 0)
+    // fpdtype_t h4 = (V_n0 - c > 0)
                  // ? V_n/2.0 - ul[${bnvars-1}]/(2.0*c)   //nektar version
                  // : V_e/2.0 - ${c['p']}/(2.0*c);        //nektar version
-                 ? V_e/2.0 - ${c['p']}/(2.0*c)
-                 : V_n/2.0 - ul[${bnvars-1}]/(2.0*c);          //subsonic outgoing characteristics
+                 // ? V_e/2.0 - ${c['p']}/(2.0*c)
+                 // : V_n/2.0 - ul[${bnvars-1}]/(2.0*c);          //subsonic outgoing characteristics
 
     // h5 = (rhob*u + p/cb)/2
-    fpdtype_t h5 = (V_n0 + c >0)
+    // fpdtype_t h5 = (V_n0 + c >0)
                  // ? V_n/2.0 + ul[${bnvars-1}]/(2.0*c)            // nektar version
                  // : V_e/2.0 + ${c['p']}/(2.0*c);                 // nektar version
-                 ? V_e/2.0 + ${c['p']}/(2.0*c)                  //subsonic incoming characteristics
-                 : V_n/2.0 + ul[${bnvars-1}]/(2.0*c);
+                 // ? V_e/2.0 + ${c['p']}/(2.0*c)                  //subsonic incoming characteristics
+                 // : V_n/2.0 + ul[${bnvars-1}]/(2.0*c);
 
+    fpdtype_t h4 = V_n/2.0 - ul[${bnvars-1}]/(2.0*c);
+    fpdtype_t h5 = V_e/2.0 + ${c['p']}/(2.0*c);
     ur[0] = h1 + (h5 - h4)/c;
 
     ur[${bnvars-1}] = c * (h5 - h4);

@@ -24,19 +24,16 @@
                  : ${c['rho']} - ${c['p']} / (c * c) ;  //incoming characteristics
 
     // h4 = (rhob*u - p/cb)/2
-    fpdtype_t h4 = (V_n0 - c > 0)
-                 ? V_n/2.0 - ul[${bnvars-1}]/(2.0*c)   //nektar version
-                 : V_e/2.0 - ${c['p']}/(2.0*c);        //nektar version
+    fpdtype_t h4 = V_n/2.0 - ul[${bnvars-1}]/(2.0*c);
 
     // h5 = (rhob*u + p/cb)/2
-    fpdtype_t h5 = (V_n0 + c >0)
-                 ? V_n/2.0 + ul[${bnvars-1}]/(2.0*c)            // nektar version
-                 : V_e/2.0 + ${c['p']}/(2.0*c);                 // nektar version
+    fpdtype_t h5 = V_e/2.0 + ${c['p']}/(2.0*c);
 
-    ur[0] = h1 + (h5 - h4)/c;
-    ur[${bnvars-1}] = c * (h5 - h4);
+    ur[0] = h1 + (h4 - h5)/c;
+    ur[${bnvars-1}] = c * (h4 - h5);
+
 % for i in range(ndims):
-    ur[${i + 1}] = ul[${bnvars}] * ${c['uvw'[i]]} + ((h4 + h5) - V_e) * nl[${i}];
+    ur[${i + 1}] = ul[${bnvars}] * ${c['uvw'[i]]} + (V_e - (h4 + h5)) * nl[${i}];
 % endfor
 
 //copy baseflow (necessary for LEE because ghost.mako only works for LNS)

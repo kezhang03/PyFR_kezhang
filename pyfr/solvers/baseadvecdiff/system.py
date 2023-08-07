@@ -88,9 +88,9 @@ class BaseAdvectionDiffusionSystem(BaseAdvectionSystem):
         """
         if self.linsolver == 'linear':
             if k['eles/qptsu']:
-                ldeps = deps(l, 'eles/gradcoru_qpts', 'eles/qptsu')
+                ldeps = deps('eles/gradcoru_qpts', 'eles/qptsu')
             else:
-                ldeps = deps(l, 'eles/gradcoru_fpts')
+                ldeps = deps('eles/gradcoru_fpts')
             g2.add_all(k['eles/cu'], deps=ldeps)
 
             # Compute the transformed flux

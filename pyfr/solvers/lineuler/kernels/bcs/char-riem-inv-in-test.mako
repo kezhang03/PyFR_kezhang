@@ -19,21 +19,19 @@
     fpdtype_t c = sqrt(${gamma}*ul[${nvars-1}]*inv);
 
 
-    fpdtype_t h1 = (V_n0 > 0)
-                 ? ul[0] - ul[${bnvars-1}] / (c * c)
-                 : ${c['rho']} - ${c['p']} / (c * c) ;  //incoming characteristics
+    fpdtype_t h1 = ${c['rho']} - ${c['p']} / (c * c) ;  //incoming characteristics
 
-    // h4 = (rhob*u - p/cb)/2
-    fpdtype_t h4 = V_n/2.0 - ul[${bnvars-1}]/(2.0*c);
+    // h4 = (rhob*u + p/cb)/2
+    fpdtype_t h4 = V_e/2.0 + ${c['p']}/(2.0*c);
 
-    // h5 = (rhob*u + p/cb)/2
-    fpdtype_t h5 = V_e/2.0 + ${c['p']}/(2.0*c);
+    // h5 = (rhob*u - p/cb)/2
+    fpdtype_t h5 = -V_n/2.0 + ul[${bnvars-1}]/(2.0*c);
 
-    ur[0] = h1 + (h4 - h5)/c;
-    ur[${bnvars-1}] = c * (h4 - h5);
-
-% for i in range(ndims):
-    ur[${i + 1}] = ul[${bnvars}] * ${c['uvw'[i]]} + (V_e - (h4 + h5)) * nl[${i}];
+    ur[0] = h1 + (h4 + h5)/c;
+    ur[${bnvars-1}] = c * (h4 + h5);
+    ur[1] = (h4 - h5) * nl[0];
+% for i in range(ndims-1):
+    ur[${i + 1 + 1}] = ul[${bnvars}] * ${c['uvw'[i + 1]]};
 % endfor
 
 //copy baseflow (necessary for LEE because ghost.mako only works for LNS)

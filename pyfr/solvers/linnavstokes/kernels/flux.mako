@@ -86,7 +86,7 @@
 
 </%pyfr:macro>
 % elif ndims == 3:
-<%pyfr:macro name='viscous_flux_add' params='uin, grad_uin, fout'>
+<%pyfr:macro name='viscous_flux_add' params='u_in, grad_uin, fout'>
     fpdtype_t invrhob = 1.0/u_in[${bnvars}];
     fpdtype_t rho = u_in[0];
     fpdtype_t u = invrhob*u_in[1], v = invrhob*u_in[2], w = invrhob*u_in[3];
@@ -116,6 +116,10 @@
       fpdtype_t pb_z = grad_uin[2][9];
 
       // perturbation derivatives (rhob*grad[u,v,w])
+      fpdtype_t rho_x = grad_uin[0][0];
+      fpdtype_t rho_y = grad_uin[1][0];
+      fpdtype_t rho_z = grad_uin[2][0];
+
       fpdtype_t u_x = grad_uin[0][1] - u*rhob_x;
       fpdtype_t u_y = grad_uin[1][1] - u*rhob_y;
       fpdtype_t u_z = grad_uin[2][1] - u*rhob_z;
@@ -128,6 +132,9 @@
       fpdtype_t w_y = grad_uin[1][3] - w*rhob_y;
       fpdtype_t w_z = grad_uin[2][3] - w*rhob_z;
 
+      fpdtype_t p_x = grad_uin[0][4];
+      fpdtype_t p_y = grad_uin[1][4];
+      fpdtype_t p_z = grad_uin[2][4];
 % if visc_corr == 'sutherland':
     // Compute the temperature and viscosity
     // Use baseflow
@@ -178,8 +185,8 @@
     // fout[2][4] += -mu_c*${c['gamma']/c['Pr']}*T_z;
 
     // add viscosity perturbation to temperature derivatives
-    fout[0][4] += -mu_c*${c['gamma']/c['Pr']}*T_x - mu_p*${c['gamma']/c['Pr']}*Tb_x;
-    fout[1][4] += -mu_c*${c['gamma']/c['Pr']}*T_y - mu_p*${c['gamma']/c['Pr']}*Tb_y;
-    fout[2][4] += -mu_c*${c['gamma']/c['Pr']}*T_z - mu_p*${c['gamma']/c['Pr']}*Tb_z;
+    fout[0][4] += gmo*(-mu_c*${c['gamma']/c['Pr']}*T_x - mu_p*${c['gamma']/c['Pr']}*Tb_x);
+    fout[1][4] += gmo*(-mu_c*${c['gamma']/c['Pr']}*T_y - mu_p*${c['gamma']/c['Pr']}*Tb_y);
+    fout[2][4] += gmo*(-mu_c*${c['gamma']/c['Pr']}*T_z - mu_p*${c['gamma']/c['Pr']}*Tb_z);
 </%pyfr:macro>
 % endif

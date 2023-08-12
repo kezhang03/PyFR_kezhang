@@ -60,26 +60,26 @@
     ${pyfr.expand('bc_common_grad_copy', 'ul', 'nl', 'grad_ul', 'grad_ur')};
 
     // Correct copied across in-fluid temp gradients to in-wall gradients
-    grad_ur[0][3] -= rhob/Tb*(nl[0]*nl[0]*(T_x-Tb_x*(p/pb-rho/rhob)) + nl[0]*nl[1]*(T_y-Tb_y*(p/pb-rho/rhob)));
-    grad_ur[1][3] -= rhob/Tb*(nl[1]*nl[0]*(T_x-Tb_x*(p/pb-rho/rhob)) + nl[1]*nl[1]*(T_y-Tb_y*(p/pb-rho/rhob)));
+    grad_ur[0][3] -= pb/Tb*(nl[0]*nl[0]*(T_x-Tb_x*(p/pb-rho/rhob)) + nl[0]*nl[1]*(T_y-Tb_y*(p/pb-rho/rhob)));
+    grad_ur[1][3] -= pb/Tb*(nl[1]*nl[0]*(T_x-Tb_x*(p/pb-rho/rhob)) + nl[1]*nl[1]*(T_y-Tb_y*(p/pb-rho/rhob)));
 
 % elif ndims == 3:
     //baseflow variables
-    fpdtype_t rhob = u_in[5];
-    fpdtype_t pb = u_in[9];
+    fpdtype_t rhob = ul[5];
+    fpdtype_t pb = ul[9];
 
     //baseflow derivatives
-    fpdtype_t rhob_x = grad_uin[0][5];
-    fpdtype_t rhob_y = grad_uin[1][5];
-    fpdtype_t rhob_z = grad_uin[2][5];
+    fpdtype_t rhob_x = grad_ul[0][5];
+    fpdtype_t rhob_y = grad_ul[1][5];
+    fpdtype_t rhob_z = grad_ul[2][5];
 
-    fpdtype_t pb_x = grad_uin[0][9];
-    fpdtype_t pb_y = grad_uin[1][9];
-    fpdtype_t pb_z = grad_uin[2][9];
+    fpdtype_t pb_x = grad_ul[0][9];
+    fpdtype_t pb_y = grad_ul[1][9];
+    fpdtype_t pb_z = grad_ul[2][9];
 
     //perturbation variables
-    fpdtype_t rho = u_in[0];
-    fpdtype_t p = u_in[4];
+    fpdtype_t rho = ul[0];
+    fpdtype_t p = ul[4];
 
     //perturbation derivatives
     fpdtype_t rho_x = grad_ul[0][0];
@@ -104,12 +104,12 @@
     ${pyfr.expand('bc_common_grad_copy', 'ul', 'nl', 'grad_ul', 'grad_ur')};
 
     // Correct copied across in-fluid temp gradients to in-wall gradients
-    grad_ur[0][4] -= rhob/Tb*(nl[0]*nl[0]*(T_x-Tb_x*(p/pb-rho/rhob)) + nl[0]*nl[1]*(T_y-Tb_y*(p/pb-rho/rhob)));
-    grad_ur[1][4] -= rhob/Tb*(nl[1]*nl[0]*(T_x-Tb_x*(p/pb-rho/rhob)) + nl[1]*nl[1]*(T_y-Tb_y*(p/pb-rho/rhob)));
-    grad_ur[2][4] -= rhob/Tb*(nl[2]*nl[0]*(T_x-Tb_x*(p/pb-rho/rhob)) + nl[2]*nl[1]*(T_y-Tb_y*(p/pb-rho/rhob)));
-    grad_ur[0][4] -= rhob/Tb*(nl[0]*nl[2]*(T_z-Tb_z*(p/pb-rho/rhob)));
-    grad_ur[1][4] -= rhob/Tb*(nl[1]*nl[2]*(T_z-Tb_z*(p/pb-rho/rhob)));
-    grad_ur[2][4] -= rhob/Tb*(nl[2]*nl[2]*(T_z-Tb_z*(p/pb-rho/rhob)));
+    grad_ur[0][4] -= pb/Tb*(nl[0]*nl[0]*(T_x-Tb_x*(p/pb-rho/rhob)) + nl[0]*nl[1]*(T_y-Tb_y*(p/pb-rho/rhob)));
+    grad_ur[1][4] -= pb/Tb*(nl[1]*nl[0]*(T_x-Tb_x*(p/pb-rho/rhob)) + nl[1]*nl[1]*(T_y-Tb_y*(p/pb-rho/rhob)));
+    grad_ur[2][4] -= pb/Tb*(nl[2]*nl[0]*(T_x-Tb_x*(p/pb-rho/rhob)) + nl[2]*nl[1]*(T_y-Tb_y*(p/pb-rho/rhob)));
+    grad_ur[0][4] -= pb/Tb*(nl[0]*nl[2]*(T_z-Tb_z*(p/pb-rho/rhob)));
+    grad_ur[1][4] -= pb/Tb*(nl[1]*nl[2]*(T_z-Tb_z*(p/pb-rho/rhob)));
+    grad_ur[2][4] -= pb/Tb*(nl[2]*nl[2]*(T_z-Tb_z*(p/pb-rho/rhob)));
 
 % endif
 </%pyfr:macro>

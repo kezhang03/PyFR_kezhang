@@ -93,6 +93,8 @@
     fpdtype_t p = u_in[4];
     fpdtype_t rhob = u_in[5];
     fpdtype_t pb = u_in[9];
+    fpdtype_t invgmo = ${1/(c['gamma']-1)};
+    fpdtype_t gmo = ${c['gamma']-1};
 
    // baseflow derivatives (grad[rho,u,v,w,p])
       fpdtype_t rhob_x = grad_uin[0][5];
@@ -151,10 +153,10 @@
 % endif
 
     // Compute temperature derivatives (Cv*dT/d[x,y,z])
-    fpdtype_t Tb = pb/rhob;
-    fpdtype_t Tb_x = (invrhob*pb_x-pb*invrhob*invrhob*rhob_x);
-    fpdtype_t Tb_y = (invrhob*pb_y-pb*invrhob*invrhob*rhob_y);
-    fpdtype_t Tb_z = (invrhob*pb_z-pb*invrhob*invrhob*rhob_z);
+    fpdtype_t Tb = invgmo*pb/rhob;
+    fpdtype_t Tb_x = invgmo*(invrhob*pb_x-pb*invrhob*invrhob*rhob_x);
+    fpdtype_t Tb_y = invgmo*(invrhob*pb_y-pb*invrhob*invrhob*rhob_y);
+    fpdtype_t Tb_z = invgmo*(invrhob*pb_z-pb*invrhob*invrhob*rhob_z);
 
     fpdtype_t T_x = Tb_x * (p/pb-rho/rhob) + Tb * (p_x/pb - p/pb/pb*pb_x - rho_x*invrhob + rho*invrhob*invrhob*rhob_x);
     fpdtype_t T_y = Tb_y * (p/pb-rho/rhob) + Tb * (p_y/pb - p/pb/pb*pb_y - rho_y*invrhob + rho*invrhob*invrhob*rhob_y);
